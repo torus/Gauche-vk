@@ -17,6 +17,7 @@ SCM_DECL_BEGIN
  */
 
 extern ScmObj test_vk(void);
+extern ScmObj aho_aho(ScmObj, ScmObj);
 
 /* Epilogue */
 SCM_DECL_END

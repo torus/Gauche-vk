@@ -12,6 +12,8 @@
 (define-cproc test-vk () ::<const-cstring>
   (result "vk is working"))
 
+(define-cproc aho-aho (a b)
+  (call "aho_aho"))
 
 ;; Local variables:
 ;; mode: scheme

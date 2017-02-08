@@ -1,0 +1,15 @@
+;; -*-Scheme-*-
+;; Gauche Package Description
+
+(define-gauche-package "Gauche-vk"
+  :version "1.0"
+  :description "Sample package.scm\nWrite your package description here."
+  :require ()
+  :maintainers ()
+  :authors ()
+  :licenses ()
+  :homepage #f
+  :repository #f
+  :gauche-version "0.9.6_pre1"
+  :configure "./configure"
+)

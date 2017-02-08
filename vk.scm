@@ -4,6 +4,7 @@
 
 (define-module vk
   (export test-vk ;; dummy
+          aho-aho
           )
   )
 (select-module vk)

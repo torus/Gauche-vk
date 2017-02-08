@@ -9,9 +9,14 @@
  * your C function definitions.
  */
 
-ScmObj test_vk(void)
+/* ScmObj test_vk(void) */
+/* { */
+/*     return SCM_MAKE_STR("vk is working"); */
+/* } */
+
+ScmObj aho_aho(ScmObj a, ScmObj b)
 {
-    return SCM_MAKE_STR("vk is working");
+  return SCM_LIST3(a, b, SCM_NIL);
 }
 
 /*
@@ -31,4 +36,5 @@ void Scm_Init_vk(void)
 
     /* Register stub-generated procedures */
     Scm_Init_vklib(mod);
+
 }
