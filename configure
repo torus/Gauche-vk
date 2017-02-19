@@ -33,6 +33,8 @@
 (cf-path-prog 'GAUCHE_INSTALL  "gauche-install")
 (cf-path-prog 'GAUCHE_CESCONV  "gauche-cesconv")
 
+(cf-prog-cxx)
+
 (cf-subst 'default_prefix (gauche-config "--prefix"))
  
 (cf-subst 'GAUCHE_PKGINCDIR  (gauche-config "--pkgincdir"))

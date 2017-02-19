@@ -8,6 +8,7 @@ datadir     = ${datarootdir}
 datarootdir = ${prefix}/share
 srcdir      = .
 VPATH       = $(srcdir)
+CXX         = g++
 
 # These may be overridden by make invocators
 DESTDIR        =
@@ -47,7 +48,7 @@ vk.$(SOEXT): $(vk_SRCS)
 	  --cppflags="'-I./sample' '-std=c++11' '-DVK_USE_PLATFORM_XCB_KHR' '-DVULKAN_SAMPLES_BASE_DIR=\".\"' '-I/home/toru/Downloads/VulkanSDK/1.0.39.1/source/glslang'" \
 	  --ldflags="-L/home/toru/Downloads/VulkanSDK/1.0.39.1/x86_64/lib/glslang -lvulkan -lxcb -lglslang -lSPIRV -lHLSL -lOSDependent -lOGLCompiler -lpthread" \
 	  --libs="-lvulkan -lxcb -lglslang -lSPIRV -lHLSL -lOSDependent -lOGLCompiler -lpthread" \
-	  --cc=g++ \
+	  --cc=$(CXX) \
 	  --local=$(LOCAL_PATHS) --verbose vk $(vk_SRCS)
 
 check : all
