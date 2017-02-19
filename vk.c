@@ -16,13 +16,23 @@
 
 ScmObj aho_aho(ScmObj a, ScmObj b)
 {
-  return SCM_LIST3(a, b, SCM_NIL);
+  return SCM_LIST2(a, b);
+}
+
+ScmObj vk_sample_main(void)
+{
+  sample_main(0, NULL);
+  return SCM_NIL;
 }
 
 /*
  * Module initialization function.
  */
 extern void Scm_Init_vklib(ScmModule*);
+
+#ifdef __cplusplus
+extern "C"
+#endif
 
 void Scm_Init_vk(void)
 {

@@ -38,12 +38,16 @@ GAUCHE_PKGINCDIR  = "$(DESTDIR)${libdir}/gauche-0.9/site/include"
 GAUCHE_PKGLIBDIR  = "$(DESTDIR)${datadir}/gauche-0.9/site/lib"
 GAUCHE_PKGARCHDIR = "$(DESTDIR)${libdir}/gauche-0.9/site/x86_64-pc-linux-gnu"
 
-vk_SRCS = $(srcdir)/vk.c $(srcdir)/vklib.stub
+vk_SRCS = $(srcdir)/vk.c $(srcdir)/vklib.stub $(wildcard sample/*.cpp)
 
 all : $(TARGET)
 
 vk.$(SOEXT): $(vk_SRCS)
 	$(GAUCHE_PACKAGE) compile \
+	  --cppflags="'-I./sample' '-std=c++11' '-DVK_USE_PLATFORM_XCB_KHR' '-DVULKAN_SAMPLES_BASE_DIR=\".\"' '-I/home/toru/Downloads/VulkanSDK/1.0.39.1/source/glslang'" \
+	  --ldflags="-L/home/toru/Downloads/VulkanSDK/1.0.39.1/x86_64/lib/glslang -lvulkan -lxcb -lglslang -lSPIRV -lHLSL -lOSDependent -lOGLCompiler -lpthread" \
+	  --libs="-lvulkan -lxcb -lglslang -lSPIRV -lHLSL -lOSDependent -lOGLCompiler -lpthread" \
+	  --cc=g++ \
 	  --local=$(LOCAL_PATHS) --verbose vk $(vk_SRCS)
 
 check : all

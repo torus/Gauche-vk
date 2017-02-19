@@ -5,6 +5,7 @@
 (define-module vk
   (export test-vk ;; dummy
           aho-aho
+          vk-sample-main
           )
   )
 (select-module vk)

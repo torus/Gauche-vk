@@ -269,7 +269,7 @@ typedef unsigned long long timestamp_t;
 timestamp_t get_milliseconds();
 
 // Main entry point of samples
-int sample_main(int argc, char *argv[]);
+extern "C" int sample_main(int argc, char *argv[]);
 
 #ifdef __ANDROID__
 // Android specific definitions & helpers.
