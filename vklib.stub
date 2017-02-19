@@ -5,10 +5,6 @@
 "
 #include \"vk.h\"
 
-#ifdef __cplusplus
-extern \"C\" {
-#endif
-
 "
 
 ;; The following entry is a dummy one.
@@ -23,11 +19,6 @@ extern \"C\" {
 (define-cproc vk-sample-main () (call "vk_sample_main"))
 
 
-"
-#ifdef __cplusplus
-}
-#endif
-"
 
 ;; Local variables:
 ;; mode: scheme

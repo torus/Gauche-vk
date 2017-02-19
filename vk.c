@@ -30,10 +30,6 @@ ScmObj vk_sample_main(void)
  */
 extern void Scm_Init_vklib(ScmModule*);
 
-#ifdef __cplusplus
-extern "C"
-#endif
-
 void Scm_Init_vk(void)
 {
     ScmModule *mod;
