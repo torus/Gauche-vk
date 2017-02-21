@@ -9,6 +9,8 @@
 #include <gauche.h>
 #include <gauche/extend.h>
 
+#include <util.hpp>
+
 SCM_DECL_BEGIN
 
 /*
@@ -20,11 +22,23 @@ extern ScmObj test_vk(void);
 extern ScmObj aho_aho(ScmObj, ScmObj);
 extern ScmObj vk_sample_main(void);
 
+extern ScmClass *VkSampleClass;
+
+#define VKSAMPLE_P(obj)      SCM_XTYPEP(obj, VkSampleClass)
+#define VKSAMPLE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(sample_info*, obj)
+#define VKSAMPLE_BOX(ptr)    Scm_MakeForeignPointer(VkSampleClass, ptr)
+
+
+
 void Scm_Init_vk(void);
 
 /* Epilogue */
 SCM_DECL_END
 
-int sample_main(int argc, char *argv[]);
+void sample_main_init(struct sample_info &info);
+void sample_main_1(struct sample_info &info);
+void sample_main_destroy(struct sample_info &info);
+/* int sample_main(int argc, char *argv[]); */
+
 
 #endif  /* GAUCHE_VK_H */

@@ -6,6 +6,8 @@
   (export test-vk ;; dummy
           aho-aho
           vk-sample-main
+          make-vk-sample
+          <vk-sample>
           )
   )
 (select-module vk)

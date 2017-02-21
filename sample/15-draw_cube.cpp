@@ -218,7 +218,7 @@ int sample_main(int argc, char *argv[]) {
     VkResult U_ASSERT_ONLY res;
     struct sample_info info = {};
 
-    process_command_line_args(info, argc, argv);
+    // process_command_line_args(info, argc, argv);
 
     sample_main_init(info);
 

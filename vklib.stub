@@ -19,6 +19,14 @@
 (define-cproc vk-sample-main () (call "vk_sample_main"))
 
 
+;;;;;;;;;;;;;;;;;;;;;;
+(define-type <vk-sample> "sample_info*" "Vulkan Sample Info"
+  "VKSAMPLE_P" "VKSAMPLE_UNBOX" "VKSAMPLE_BOX")
+
+(define-cproc make-vk-sample () ::<vk-sample>
+  (expr "new sample_info()"))
+
+
 
 ;; Local variables:
 ;; mode: scheme

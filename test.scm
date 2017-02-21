@@ -18,6 +18,17 @@
 
 (vk-sample-main)
 
+;;;;;;;;;;;;;;
+
+(test* "constructor" #t
+       (let ((q (make-vk-sample)))
+         (is-a? q <vk-sample>)))
+
+
+
+
+
+
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.
 (test-end :exit-on-failure #t)
