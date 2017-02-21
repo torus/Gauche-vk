@@ -23,7 +23,7 @@ ScmObj aho_aho(ScmObj a, ScmObj b)
 
 ScmObj vk_sample_main(void)
 {
-    VkResult U_ASSERT_ONLY res;
+    /* VkResult U_ASSERT_ONLY res; */
     struct sample_info info = {};
 
     // process_command_line_args(info, argc, argv);
@@ -35,6 +35,24 @@ ScmObj vk_sample_main(void)
 
     sample_main_destroy(info);
     /* sample_main(0, NULL); */
+    return SCM_NIL;
+}
+
+ScmObj vk_sample_main_init(sample_info *ptr)
+{
+    sample_main_init(*ptr);
+    return SCM_NIL;
+}
+
+ScmObj vk_sample_main_body(sample_info *ptr)
+{
+    sample_main_1(*ptr);
+    return SCM_NIL;
+}
+
+ScmObj vk_sample_main_destroy(sample_info *ptr)
+{
+    sample_main_destroy(*ptr);
     return SCM_NIL;
 }
 

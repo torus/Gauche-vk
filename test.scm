@@ -19,13 +19,15 @@
 (vk-sample-main)
 
 ;;;;;;;;;;;;;;
-
+(define info #f)
 (test* "constructor" #t
        (let ((q (make-vk-sample)))
+         (set! info q)
          (is-a? q <vk-sample>)))
 
-
-
+(vk-sample-init info)
+(vk-sample-body info)
+(vk-sample-destroy info)
 
 
 

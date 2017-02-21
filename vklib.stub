@@ -27,6 +27,16 @@
   (expr "new sample_info()"))
 
 
+(define-cproc vk-sample-init (info::<vk-sample>)
+  (call "vk_sample_main_init"))
+
+(define-cproc vk-sample-body (info::<vk-sample>)
+  (call "vk_sample_main_body"))
+
+(define-cproc vk-sample-destroy (info::<vk-sample>)
+  (call "vk_sample_main_destroy"))
+
+
 
 ;; Local variables:
 ;; mode: scheme

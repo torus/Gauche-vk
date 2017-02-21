@@ -22,6 +22,11 @@ extern ScmObj test_vk(void);
 extern ScmObj aho_aho(ScmObj, ScmObj);
 extern ScmObj vk_sample_main(void);
 
+extern ScmObj vk_sample_main_init(sample_info *ptr);
+extern ScmObj vk_sample_main_body(sample_info *ptr);
+extern ScmObj vk_sample_main_destroy(sample_info *ptr);
+
+
 extern ScmClass *VkSampleClass;
 
 #define VKSAMPLE_P(obj)      SCM_XTYPEP(obj, VkSampleClass)

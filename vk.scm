@@ -8,6 +8,9 @@
           vk-sample-main
           make-vk-sample
           <vk-sample>
+          vk-sample-init
+          vk-sample-body
+          vk-sample-destroy
           )
   )
 (select-module vk)
