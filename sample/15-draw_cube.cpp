@@ -63,13 +63,10 @@ static const char *fragShaderText =
     "   outColor = color;\n"
     "}\n";
 
-int sample_main(int argc, char *argv[]) {
-    VkResult U_ASSERT_ONLY res;
-    struct sample_info info = {};
+void sample_main_init(struct sample_info &info) {
     char sample_title[] = "Draw Cube";
     const bool depthPresent = true;
 
-    process_command_line_args(info, argc, argv);
     init_global_layer_properties(info);
     init_instance_extension_names(info);
     init_device_extension_names(info);
@@ -99,8 +96,10 @@ int sample_main(int argc, char *argv[]) {
     init_descriptor_set(info, false);
     init_pipeline_cache(info);
     init_pipeline(info, depthPresent);
+}
 
-    /* VULKAN_KEY_START */
+void sample_main_1(struct sample_info &info) {
+    VkResult U_ASSERT_ONLY res;
 
     VkClearValue clear_values[2];
     clear_values[0].color.float32[0] = 0.2f;
@@ -211,6 +210,26 @@ int sample_main(int argc, char *argv[]) {
 
     vkDestroySemaphore(info.device, imageAcquiredSemaphore, NULL);
     vkDestroyFence(info.device, drawFence, NULL);
+}
+
+void sample_main_destroy(struct sample_info &info);
+
+int sample_main(int argc, char *argv[]) {
+    VkResult U_ASSERT_ONLY res;
+    struct sample_info info = {};
+
+    process_command_line_args(info, argc, argv);
+
+    sample_main_init(info);
+
+    /* VULKAN_KEY_START */
+    sample_main_1(info);
+
+    sample_main_destroy(info);
+    return 0;
+}
+
+void sample_main_destroy(struct sample_info &info) {
     destroy_pipeline(info);
     destroy_pipeline_cache(info);
     destroy_descriptor_pool(info);
@@ -227,5 +246,6 @@ int sample_main(int argc, char *argv[]) {
     destroy_device(info);
     destroy_window(info);
     destroy_instance(info);
-    return 0;
 }
+
+  
