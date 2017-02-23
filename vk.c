@@ -16,6 +16,8 @@
 
 ScmClass *VkSampleClass;
 ScmClass *VkClearValueClass;
+ScmClass *VkClearColorValueClass;
+ScmClass *VkClearDepthStencilValueClass;
 
 ScmObj aho_aho(ScmObj a, ScmObj b)
 {
@@ -75,6 +77,7 @@ static void vk_sample_cleanup(ScmObj obj)
   delete q;
 }
 
+// VkClearValue
 static void vk_clear_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
 {
     VkClearValue *q = VKCLEARVALUE_UNBOX(obj);
@@ -85,6 +88,34 @@ static void vk_clear_value_cleanup(ScmObj obj)
 {
     VkClearValue *q;
     q = VKCLEARVALUE_UNBOX(obj);
+    delete q;
+}
+
+// VkClearColorValue
+static void vk_clear_color_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkClearColorValue *q = VKCLEARCOLORVALUE_UNBOX(obj);
+    Scm_Printf(out, "#<vk-clear-color-value \"%p\">", q);
+}
+
+static void vk_clear_color_value_cleanup(ScmObj obj)
+{
+    VkClearColorValue *q;
+    q = VKCLEARCOLORVALUE_UNBOX(obj);
+    delete q;
+}
+
+// VkClearDepthStencilValue
+static void vk_clear_depth_stencil_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkClearDepthStencilValue *q = VKCLEARDEPTHSTENCILVALUE_UNBOX(obj);
+    Scm_Printf(out, "#<vk-clear-depth-stencil-value \"%p\">", q);
+}
+
+static void vk_clear_depth_stencil_value_cleanup(ScmObj obj)
+{
+    VkClearDepthStencilValue *q;
+    q = VKCLEARDEPTHSTENCILVALUE_UNBOX(obj);
     delete q;
 }
 
@@ -108,6 +139,18 @@ void Scm_Init_vk(void)
         Scm_MakeForeignPointerClass(mod, "<vk-clear-value>",
                                     vk_clear_value_print,
                                     vk_clear_value_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkClearColorValueClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-clear-color-value>",
+                                    vk_clear_color_value_print,
+                                    vk_clear_color_value_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkClearDepthStencilValueClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-clear-depth-stencil-value>",
+                                    vk_clear_depth_stencil_value_print,
+                                    vk_clear_depth_stencil_value_cleanup,
                                     SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
 
     /* Register stub-generated procedures */

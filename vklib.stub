@@ -37,12 +37,33 @@
   (call "vk_sample_main_destroy"))
 
 
+;; <vk-clear-color-value>
+(define-type <vk-clear-color-value> "VkClearColorValue*" "VkClearColorValue"
+  "VKCLEARCOLORVALUE_P" "VKCLEARCOLORVALUE_UNBOX" "VKCLEARCOLORVALUE_BOX")
 
+(define-cproc make-vk-clear-color-value () ::<vk-clear-color-value>
+  (expr "new VkClearColorValue()"))
+
+;; <vk-clear-depth-stencil-value>
+(define-type <vk-clear-depth-stencil-value> "VkClearDepthStencilValue*" "VkClearDepthStencilValue"
+  "VKCLEARDEPTHSTENCILVALUE_P" "VKCLEARDEPTHSTENCILVALUE_UNBOX" "VKCLEARDEPTHSTENCILVALUE_BOX")
+
+(define-cproc make-vk-clear-depth-stencil-value () ::<vk-clear-depth-stencil-value>
+  (expr "new VkClearDepthStencilValue()"))
+
+
+;; <vk-clear-value>
 (define-type <vk-clear-value> "VkClearValue*" "VkClearValue"
   "VKCLEARVALUE_P" "VKCLEARVALUE_UNBOX" "VKCLEARVALUE_BOX")
 
 (define-cproc make-vk-clear-value () ::<vk-clear-value>
   (expr "new VkClearValue()"))
+
+(define-cproc vk-clear-value-color (val::<vk-clear-value>) ::<vk-clear-color-value>
+  (expr "&val->color"))
+
+(define-cproc vk-clear-value-depth-stencil (val::<vk-clear-value>) ::<vk-clear-depth-stencil-value>
+  (expr "&val->depthStencil"))
 
 ;; Local variables:
 ;; mode: scheme

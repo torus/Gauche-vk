@@ -39,6 +39,18 @@ extern ScmClass *VkClearValueClass;
 #define VKCLEARVALUE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkClearValue*, obj)
 #define VKCLEARVALUE_BOX(ptr)    Scm_MakeForeignPointer(VkClearValueClass, ptr)
 
+extern ScmClass *VkClearColorValueClass;
+
+#define VKCLEARCOLORVALUE_P(obj)      SCM_XTYPEP(obj, VkClearColorValueClass)
+#define VKCLEARCOLORVALUE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkClearColorValue*, obj)
+#define VKCLEARCOLORVALUE_BOX(ptr)    Scm_MakeForeignPointer(VkClearColorValueClass, ptr)
+
+extern ScmClass *VkClearDepthStencilValueClass;
+
+#define VKCLEARDEPTHSTENCILVALUE_P(obj)      SCM_XTYPEP(obj, VkClearDepthStencilValueClass)
+#define VKCLEARDEPTHSTENCILVALUE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkClearDepthStencilValue*, obj)
+#define VKCLEARDEPTHSTENCILVALUE_BOX(ptr)    Scm_MakeForeignPointer(VkClearDepthStencilValueClass, ptr)
+
 
 
 void Scm_Init_vk(void);
