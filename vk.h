@@ -33,6 +33,12 @@ extern ScmClass *VkSampleClass;
 #define VKSAMPLE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(sample_info*, obj)
 #define VKSAMPLE_BOX(ptr)    Scm_MakeForeignPointer(VkSampleClass, ptr)
 
+extern ScmClass *VkClearValueClass;
+
+#define VKCLEARVALUE_P(obj)      SCM_XTYPEP(obj, VkClearValueClass)
+#define VKCLEARVALUE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkClearValue*, obj)
+#define VKCLEARVALUE_BOX(ptr)    Scm_MakeForeignPointer(VkClearValueClass, ptr)
+
 
 
 void Scm_Init_vk(void);

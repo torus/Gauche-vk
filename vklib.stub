@@ -38,6 +38,12 @@
 
 
 
+(define-type <vk-clear-value> "VkClearValue*" "VkClearValue"
+  "VKCLEARVALUE_P" "VKCLEARVALUE_UNBOX" "VKCLEARVALUE_BOX")
+
+(define-cproc make-vk-clear-value () ::<vk-clear-value>
+  (expr "new VkClearValue()"))
+
 ;; Local variables:
 ;; mode: scheme
 ;; end:

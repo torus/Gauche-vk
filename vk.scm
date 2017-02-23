@@ -11,6 +11,8 @@
           vk-sample-init
           vk-sample-body
           vk-sample-destroy
+          <vk-clear-value>
+          make-vk-clear-value
           )
   )
 (select-module vk)
@@ -21,6 +23,4 @@
 ;;
 ;; Put your Scheme definitions here
 ;;
-
-
 

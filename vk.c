@@ -15,6 +15,7 @@
 /* } */
 
 ScmClass *VkSampleClass;
+ScmClass *VkClearValueClass;
 
 ScmObj aho_aho(ScmObj a, ScmObj b)
 {
@@ -74,6 +75,19 @@ static void vk_sample_cleanup(ScmObj obj)
   delete q;
 }
 
+static void vk_clear_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkClearValue *q = VKCLEARVALUE_UNBOX(obj);
+    Scm_Printf(out, "#<vk-clear-value \"%p\">", q);
+}
+
+static void vk_clear_value_cleanup(ScmObj obj)
+{
+    VkClearValue *q;
+    q = VKCLEARVALUE_UNBOX(obj);
+    delete q;
+}
+
 void Scm_Init_vk(void)
 {
     ScmModule *mod;
@@ -88,6 +102,12 @@ void Scm_Init_vk(void)
         Scm_MakeForeignPointerClass(mod, "<vk-sample>",
                                     vk_sample_print,
                                     vk_sample_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkClearValueClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-clear-value>",
+                                    vk_clear_value_print,
+                                    vk_clear_value_cleanup,
                                     SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
 
     /* Register stub-generated procedures */
