@@ -20,6 +20,10 @@
           vk-clear-color-value-float32
           vk-clear-color-value-float32-set!
           <vk-clear-depth-stencil-value>
+          vk-clear-depth-stencil-value-depth-set!
+          vk-clear-depth-stencil-value-depth
+          vk-clear-depth-stencil-value-stencil-set!
+          vk-clear-depth-stencil-value-stencil
           )
   )
 (select-module vk)

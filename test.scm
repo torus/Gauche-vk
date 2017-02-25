@@ -37,6 +37,8 @@
          (set! col-val v)
          (is-a? v <vk-clear-color-value>)))
 
+(define depth-stencil #f)
+
 (define (check-with-tolerance expected result)
   (< (abs (- expected result)) 1.0e-5))
 
@@ -66,8 +68,18 @@
 
 (test* "vk-clear-value-depth-stencil" #t
        (let ((v (vk-clear-value-depth-stencil clr-val)))
+         (set! depth-stencil v)
          (is-a? v <vk-clear-depth-stencil-value>)))
 
+(test* "vk-clear-depth-stencil-value-depth-set!" 0.5
+       (begin (vk-clear-depth-stencil-value-depth-set! depth-stencil 0.5)
+              (vk-clear-depth-stencil-value-depth depth-stencil))
+       check-with-tolerance)
+
+(test* "vk-clear-depth-stencil-value-stencil-set!" 5
+       (begin (vk-clear-depth-stencil-value-stencil-set! depth-stencil 5)
+              (vk-clear-depth-stencil-value-stencil depth-stencil))
+       check-with-tolerance)
 
 ;; (vk-sample-init info)
 ;; (vk-sample-body info)

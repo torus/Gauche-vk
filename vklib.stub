@@ -61,6 +61,22 @@
 (define-cproc make-vk-clear-depth-stencil-value () ::<vk-clear-depth-stencil-value>
   (expr "new VkClearDepthStencilValue()"))
 
+(define-cproc vk-clear-depth-stencil-value-depth-set!
+  (depste::<vk-clear-depth-stencil-value> val::<float>) ::<float>
+  (expr "depste->depth = val"))
+
+(define-cproc vk-clear-depth-stencil-value-depth
+  (depste::<vk-clear-depth-stencil-value>) ::<float>
+  (expr "depste->depth"))
+
+(define-cproc vk-clear-depth-stencil-value-stencil-set!
+  (depste::<vk-clear-depth-stencil-value> val::<uint32>) ::<uint32>
+  (expr "depste->stencil = val"))
+
+(define-cproc vk-clear-depth-stencil-value-stencil
+  (depste::<vk-clear-depth-stencil-value>) ::<uint32>
+  (expr "depste->stencil"))
+
 
 ;; <vk-clear-value>
 (define-type <vk-clear-value> "VkClearValue*" "VkClearValue"
