@@ -44,6 +44,16 @@
 (define-cproc make-vk-clear-color-value () ::<vk-clear-color-value>
   (expr "new VkClearColorValue()"))
 
+(define-cproc vk-clear-color-value-float32-set!
+  (col::<vk-clear-color-value> index::<int> val::<float>) ::<float>
+  (expr "col->float32[index] = val"))
+
+(define-cproc vk-clear-color-value-float32
+  (col::<vk-clear-color-value> index::<int>) ::<float>
+  (expr "col->float32[index]"))
+
+
+
 ;; <vk-clear-depth-stencil-value>
 (define-type <vk-clear-depth-stencil-value> "VkClearDepthStencilValue*" "VkClearDepthStencilValue"
   "VKCLEARDEPTHSTENCILVALUE_P" "VKCLEARDEPTHSTENCILVALUE_UNBOX" "VKCLEARDEPTHSTENCILVALUE_BOX")

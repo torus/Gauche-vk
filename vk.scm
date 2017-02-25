@@ -17,6 +17,8 @@
           vk-clear-value-depth-stencil
           <vk-clear-color-value>
           make-vk-clear-color-value
+          vk-clear-color-value-float32
+          vk-clear-color-value-float32-set!
           <vk-clear-depth-stencil-value>
           )
   )
