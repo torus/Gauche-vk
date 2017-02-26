@@ -98,6 +98,9 @@ void sample_main_init(struct sample_info &info) {
     init_pipeline(info, depthPresent);
 }
 
+void sample_main_2(struct sample_info &info,
+                   VkClearValue *clear_values, VkSemaphore &imageAcquiredSemaphore);
+
 void sample_main_1(struct sample_info &info) {
     VkResult U_ASSERT_ONLY res;
 
@@ -119,6 +122,13 @@ void sample_main_1(struct sample_info &info) {
     res = vkCreateSemaphore(info.device, &imageAcquiredSemaphoreCreateInfo,
                             NULL, &imageAcquiredSemaphore);
     assert(res == VK_SUCCESS);
+
+    sample_main_2(info, clear_values, imageAcquiredSemaphore);
+}
+
+void sample_main_2(struct sample_info &info,
+                   VkClearValue *clear_values, VkSemaphore &imageAcquiredSemaphore) {
+    VkResult U_ASSERT_ONLY res;
 
     // Get the index of the next available swapchain image:
     res = vkAcquireNextImageKHR(info.device, info.swap_chain, UINT64_MAX,

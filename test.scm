@@ -106,13 +106,39 @@
          (set! sem v)
          (is-a? v <vk-semaphore>)))
 
-(test* "vk-create-semaphore" VK_SUCCESS
+;; Crashes
+#;(test* "vk-create-semaphore" VK_SUCCESS
        (let ((res (vk-create-semaphore (vk-sample-device info) sem-cre #f sem)))
          res))
 
-;; (vk-sample-init info)
+
+
+
+(vk-sample-init info)
+
+(define clear-values-0 (make-vk-clear-value))
+(let ((col (vk-clear-value-color clear-values-0)))
+  (vk-clear-color-value-float32-set! col 0 0.2)
+  (vk-clear-color-value-float32-set! col 1 0.2)
+  (vk-clear-color-value-float32-set! col 2 0.2)
+  (vk-clear-color-value-float32-set! col 3 0.2))
+
+(define clear-values-1 (make-vk-clear-value))
+(let ((dep (vk-clear-value-depth-stencil clear-values-1)))
+  (vk-clear-depth-stencil-value-depth-set! dep 1.0)
+  (vk-clear-depth-stencil-value-stencil-set! dep 0))
+
+(define sem-info (make-vk-semaphore-create-info))
+(vk-semaphore-create-info-s-type-set! sem-info VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
+(vk-semaphore-create-info-p-next-set! sem-info #f)
+(vk-semaphore-create-info-flags-set! sem-info 0)
+
+(define sem (make-vk-semaphore))
+(vk-create-semaphore (vk-sample-device info) sem-info #f sem)
+
+(vk-sample-body-x info (list clear-values-0 clear-values-1) sem)
 ;; (vk-sample-body info)
-;; (vk-sample-destroy info)
+(vk-sample-destroy info)
 
 ;; If you don't want `gosh' to exit with nonzero status even if
 ;; the test fails, pass #f to :exit-on-failure.

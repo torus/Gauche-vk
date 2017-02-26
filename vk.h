@@ -24,6 +24,7 @@ extern ScmObj vk_sample_main(void);
 
 extern ScmObj vk_sample_main_init(sample_info *ptr);
 extern ScmObj vk_sample_main_body(sample_info *ptr);
+extern ScmObj vk_sample_main_body_x(sample_info *ptr, ScmObj clrvals, VkSemaphore *sem);
 extern ScmObj vk_sample_main_destroy(sample_info *ptr);
 
 
@@ -76,7 +77,6 @@ extern ScmClass *VkAllocationCallbacksClass;
 #define VKALLOCATIONCALLBACKS_BOX(ptr)    Scm_MakeForeignPointer(VkAllocationCallbacksClass, ptr)
 
 
-
 void Scm_Init_vk(void);
 
 /* Epilogue */
@@ -84,6 +84,8 @@ SCM_DECL_END
 
 void sample_main_init(struct sample_info &info);
 void sample_main_1(struct sample_info &info);
+void sample_main_2(struct sample_info &info,
+                   VkClearValue *clear_values, VkSemaphore &imageAcquiredSemaphore);
 void sample_main_destroy(struct sample_info &info);
 /* int sample_main(int argc, char *argv[]); */
 

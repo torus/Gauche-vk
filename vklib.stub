@@ -151,6 +151,11 @@
   (expr "(int)vkCreateSemaphore(*dev, info, alloc, sem)"))
 
 
+;;;;;;
+
+(define-cproc vk-sample-body-x (info::<vk-sample> clrvals::<list> sem::<vk-semaphore>)
+  vk_sample_main_body_x)
+
 
 ;; Local variables:
 ;; mode: scheme

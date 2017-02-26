@@ -12,6 +12,7 @@
           <vk-sample>
           vk-sample-init
           vk-sample-body
+          vk-sample-body-x
           vk-sample-destroy
           vk-sample-device
           <vk-clear-value>

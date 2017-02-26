@@ -57,6 +57,21 @@ ScmObj vk_sample_main_body(sample_info *ptr)
     return SCM_NIL;
 }
 
+ScmObj vk_sample_main_body_x(sample_info *ptr, ScmObj clrvals, VkSemaphore *sem)
+{
+    int len = Scm_Length(clrvals); /* Should be 2 */
+    VkClearValue *vals = SCM_NEW_ARRAY(VkClearValue, len);
+    ScmObj lis = clrvals;
+
+    for (int i = 0; i < len; i ++) {
+        VkClearValue *ptr = VKCLEARVALUE_UNBOX(SCM_CAR(lis));
+        memcpy(vals + i, ptr, sizeof(VkClearValue));
+        lis = SCM_CDR(lis);
+    }
+    sample_main_2(*ptr, vals, *sem);
+    return SCM_NIL;
+}
+
 ScmObj vk_sample_main_destroy(sample_info *ptr)
 {
     sample_main_destroy(*ptr);
