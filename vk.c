@@ -19,6 +19,9 @@ ScmClass *VkClearValueClass;
 ScmClass *VkClearColorValueClass;
 ScmClass *VkClearDepthStencilValueClass;
 ScmClass *VkSemaphoreCreateInfoClass;
+ScmClass *VkSemaphoreClass;
+ScmClass *VkDeviceClass;
+ScmClass *VkAllocationCallbacksClass;
 
 ScmObj aho_aho(ScmObj a, ScmObj b)
 {
@@ -135,6 +138,53 @@ static void vk_semaphore_create_info_cleanup(ScmObj obj)
     delete q;
 }
 
+// VkSemaphore
+
+static void vk_semaphore_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkSemaphore *q = VKSEMAPHORE_UNBOX(obj);
+    Scm_Printf(out, "#<vk-semaphore \"%p\">", q);
+}
+
+static void vk_semaphore_cleanup(ScmObj obj)
+{
+    VkSemaphore *q;
+    q = VKSEMAPHORE_UNBOX(obj);
+    delete q;
+}
+
+// VkDevice
+
+static void vk_device_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkDevice *q = VKDEVICE_UNBOX(obj);
+    Scm_Printf(out, "#<vk-device \"%p\">", q);
+}
+
+static void vk_device_cleanup(ScmObj obj)
+{
+    VkDevice *q;
+    q = VKDEVICE_UNBOX(obj);
+    delete q;
+}
+
+// VkAllocationCallbacks
+
+static void vk_allocation_callbacks_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkAllocationCallbacks *q = VKALLOCATIONCALLBACKS_UNBOX(obj);
+    Scm_Printf(out, "#<vk-allocation-callbacks \"%p\">", q);
+}
+
+static void vk_allocation_callbacks_cleanup(ScmObj obj)
+{
+    VkAllocationCallbacks *q;
+    q = VKALLOCATIONCALLBACKS_UNBOX(obj);
+    delete q;
+}
+
+
+
 void Scm_Init_vk(void)
 {
     ScmModule *mod;
@@ -173,6 +223,24 @@ void Scm_Init_vk(void)
         Scm_MakeForeignPointerClass(mod, "<vk-semaphore-create-info>",
                                     vk_semaphore_create_info_print,
                                     vk_semaphore_create_info_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkSemaphoreClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-semaphore>",
+                                    vk_semaphore_print,
+                                    vk_semaphore_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkDeviceClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-device>",
+                                    vk_device_print,
+                                    vk_device_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkAllocationCallbacksClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-allocation-callbacks>",
+                                    vk_allocation_callbacks_print,
+                                    vk_allocation_callbacks_cleanup,
                                     SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
 
     /* Register stub-generated procedures */

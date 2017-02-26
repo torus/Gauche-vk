@@ -57,6 +57,24 @@ extern ScmClass *VkSemaphoreCreateInfoClass;
 #define VKSEMAPHORECREATEINFO_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkSemaphoreCreateInfo*, obj)
 #define VKSEMAPHORECREATEINFO_BOX(ptr)    Scm_MakeForeignPointer(VkSemaphoreCreateInfoClass, ptr)
 
+extern ScmClass *VkSemaphoreClass;
+
+#define VKSEMAPHORE_P(obj)      SCM_XTYPEP(obj, VkSemaphoreClass)
+#define VKSEMAPHORE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkSemaphore*, obj)
+#define VKSEMAPHORE_BOX(ptr)    Scm_MakeForeignPointer(VkSemaphoreClass, ptr)
+
+extern ScmClass *VkDeviceClass;
+
+#define VKDEVICE_P(obj)      SCM_XTYPEP(obj, VkDeviceClass)
+#define VKDEVICE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkDevice*, obj)
+#define VKDEVICE_BOX(ptr)    Scm_MakeForeignPointer(VkDeviceClass, ptr)
+
+extern ScmClass *VkAllocationCallbacksClass;
+
+#define VKALLOCATIONCALLBACKS_P(obj)      SCM_XTYPEP(obj, VkAllocationCallbacksClass)
+#define VKALLOCATIONCALLBACKS_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkAllocationCallbacks*, obj)
+#define VKALLOCATIONCALLBACKS_BOX(ptr)    Scm_MakeForeignPointer(VkAllocationCallbacksClass, ptr)
+
 
 
 void Scm_Init_vk(void);

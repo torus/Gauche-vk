@@ -8,10 +8,12 @@
           vk-sample-main
           make-vk-sample
           VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+          VK_SUCCESS
           <vk-sample>
           vk-sample-init
           vk-sample-body
           vk-sample-destroy
+          vk-sample-device
           <vk-clear-value>
           make-vk-clear-value
           vk-clear-value-color
@@ -33,6 +35,13 @@
           vk-semaphore-create-info-p-next
           vk-semaphore-create-info-flags-set!
           vk-semaphore-create-info-flags
+          ;; VkSemaphore
+          <vk-semaphore>
+          make-vk-semaphore
+          vk-create-semaphore
+          <vk-device>
+          <vk-allocation-callbacks>
+
           )
   )
 (select-module vk)

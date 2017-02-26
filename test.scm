@@ -100,6 +100,16 @@
        (begin (vk-semaphore-create-info-flags-set! sem-cre 0)
               (vk-semaphore-create-info-flags sem-cre)))
 
+(define sem #f)
+(test* "make-vk-semaphore" #t
+       (let ((v (make-vk-semaphore)))
+         (set! sem v)
+         (is-a? v <vk-semaphore>)))
+
+(test* "vk-create-semaphore" VK_SUCCESS
+       (let ((res (vk-create-semaphore (vk-sample-device info) sem-cre #f sem)))
+         res))
+
 ;; (vk-sample-init info)
 ;; (vk-sample-body info)
 ;; (vk-sample-destroy info)

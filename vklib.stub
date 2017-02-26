@@ -19,12 +19,20 @@
 (define-cproc vk-sample-main () (call "vk_sample_main"))
 
 
+;; <vk-device>
+(define-type <vk-device> "VkDevice*" "VkDevice"
+  "VKDEVICE_P" "VKDEVICE_UNBOX" "VKDEVICE_BOX")
+
+
 ;;;;;;;;;;;;;;;;;;;;;;
 (define-type <vk-sample> "sample_info*" "Vulkan Sample Info"
   "VKSAMPLE_P" "VKSAMPLE_UNBOX" "VKSAMPLE_BOX")
 
 (define-cproc make-vk-sample () ::<vk-sample>
   (expr "new sample_info()"))
+
+(define-cproc vk-sample-device (info::<vk-sample>) ::<vk-device>
+  (expr "&info->device"))
 
 
 (define-cproc vk-sample-init (info::<vk-sample>)
@@ -99,11 +107,7 @@
   (expr "new VkSemaphoreCreateInfo()"))
 
 (define-enum VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
-
-;; vk-semaphore-create-info-s-type-set!
-;; vk-semaphore-create-info-s-type
-;; vk-semaphore-create-info-p-next-set!
-;; vk-semaphore-create-info-p-next
+(define-enum VK_SUCCESS)
 
 (define-cproc vk-semaphore-create-info-s-type-set!
   (info::<vk-semaphore-create-info> typ::<int>) ::<int>
@@ -128,6 +132,25 @@
 (define-cproc vk-semaphore-create-info-flags
   (info::<vk-semaphore-create-info>) ::<int>
   (expr "info->flags"))
+
+;; <vk-semaphore>
+(define-type <vk-semaphore> "VkSemaphore*" "VkSemaphore"
+  "VKSEMAPHORE_P" "VKSEMAPHORE_UNBOX" "VKSEMAPHORE_BOX")
+
+;; <vk-allocation-callbacks>
+(define-type <vk-allocation-callbacks> "VkAllocationCallbacks*" "VkAllocationCallbacks"
+  "VKALLOCATIONCALLBACKS_P" "VKALLOCATIONCALLBACKS_UNBOX" "VKALLOCATIONCALLBACKS_BOX")
+
+
+(define-cproc make-vk-semaphore () ::<vk-semaphore>
+  (expr "new VkSemaphore()"))
+
+(define-cproc vk-create-semaphore
+  (dev::<vk-device> info::<vk-semaphore-create-info>
+                    alloc::<vk-allocation-callbacks>? sem::<vk-semaphore>) ::<int>
+  (expr "(int)vkCreateSemaphore(*dev, info, alloc, sem)"))
+
+
 
 ;; Local variables:
 ;; mode: scheme
