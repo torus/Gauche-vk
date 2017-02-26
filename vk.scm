@@ -7,6 +7,7 @@
           aho-aho
           vk-sample-main
           make-vk-sample
+          VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
           <vk-sample>
           vk-sample-init
           vk-sample-body
@@ -24,6 +25,14 @@
           vk-clear-depth-stencil-value-depth
           vk-clear-depth-stencil-value-stencil-set!
           vk-clear-depth-stencil-value-stencil
+          <vk-semaphore-create-info>
+          make-vk-semaphore-create-info
+          vk-semaphore-create-info-s-type-set!
+          vk-semaphore-create-info-s-type
+          vk-semaphore-create-info-p-next-set!
+          vk-semaphore-create-info-p-next
+          vk-semaphore-create-info-flags-set!
+          vk-semaphore-create-info-flags
           )
   )
 (select-module vk)

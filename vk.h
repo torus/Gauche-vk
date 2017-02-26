@@ -51,6 +51,12 @@ extern ScmClass *VkClearDepthStencilValueClass;
 #define VKCLEARDEPTHSTENCILVALUE_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkClearDepthStencilValue*, obj)
 #define VKCLEARDEPTHSTENCILVALUE_BOX(ptr)    Scm_MakeForeignPointer(VkClearDepthStencilValueClass, ptr)
 
+extern ScmClass *VkSemaphoreCreateInfoClass;
+
+#define VKSEMAPHORECREATEINFO_P(obj)      SCM_XTYPEP(obj, VkSemaphoreCreateInfoClass)
+#define VKSEMAPHORECREATEINFO_UNBOX(obj)  SCM_FOREIGN_POINTER_REF(VkSemaphoreCreateInfo*, obj)
+#define VKSEMAPHORECREATEINFO_BOX(ptr)    Scm_MakeForeignPointer(VkSemaphoreCreateInfoClass, ptr)
+
 
 
 void Scm_Init_vk(void);

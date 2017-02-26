@@ -81,6 +81,25 @@
               (vk-clear-depth-stencil-value-stencil depth-stencil))
        check-with-tolerance)
 
+;;; VkSemaphore
+(define sem-cre #f)
+(test* "make-vk-semaphore-create-info" #t
+       (let ((v (make-vk-semaphore-create-info)))
+         (set! sem-cre v)
+         (is-a? v <vk-semaphore-create-info>)))
+
+(test* "vk-semaphore-create-info-s-type-set!" VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+       (begin (vk-semaphore-create-info-s-type-set! sem-cre VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
+              (vk-semaphore-create-info-s-type sem-cre)))
+
+(test* "vk-semaphore-create-info-p-next-set!" #f
+       (begin (vk-semaphore-create-info-p-next-set! sem-cre #f)
+              (vk-semaphore-create-info-p-next sem-cre)))
+
+(test* "vk-semaphore-create-info-flags-set!" 0
+       (begin (vk-semaphore-create-info-flags-set! sem-cre 0)
+              (vk-semaphore-create-info-flags sem-cre)))
+
 ;; (vk-sample-init info)
 ;; (vk-sample-body info)
 ;; (vk-sample-destroy info)

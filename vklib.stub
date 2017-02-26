@@ -91,6 +91,44 @@
 (define-cproc vk-clear-value-depth-stencil (val::<vk-clear-value>) ::<vk-clear-depth-stencil-value>
   (expr "&val->depthStencil"))
 
+;; <vk-semaphore-create-info>
+(define-type <vk-semaphore-create-info> "VkSemaphoreCreateInfo*" "VkSemaphoreCreateInfo"
+  "VKSEMAPHORECREATEINFO_P" "VKSEMAPHORECREATEINFO_UNBOX" "VKSEMAPHORECREATEINFO_BOX")
+
+(define-cproc make-vk-semaphore-create-info () ::<vk-semaphore-create-info>
+  (expr "new VkSemaphoreCreateInfo()"))
+
+(define-enum VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
+
+;; vk-semaphore-create-info-s-type-set!
+;; vk-semaphore-create-info-s-type
+;; vk-semaphore-create-info-p-next-set!
+;; vk-semaphore-create-info-p-next
+
+(define-cproc vk-semaphore-create-info-s-type-set!
+  (info::<vk-semaphore-create-info> typ::<int>) ::<int>
+  (expr "info->sType = (VkStructureType)typ"))
+
+(define-cproc vk-semaphore-create-info-s-type
+  (info::<vk-semaphore-create-info>) ::<int>
+  (expr "info->sType"))
+
+(define-cproc vk-semaphore-create-info-p-next-set!
+  (info::<vk-semaphore-create-info> next::<vk-semaphore-create-info>?) ::<vk-semaphore-create-info>?
+  (expr "(VkSemaphoreCreateInfo*)(info->pNext = next)"))
+
+(define-cproc vk-semaphore-create-info-p-next
+  (info::<vk-semaphore-create-info>) ::<vk-semaphore-create-info>?
+  (expr "(VkSemaphoreCreateInfo*)info->pNext"))
+
+(define-cproc vk-semaphore-create-info-flags-set!
+  (info::<vk-semaphore-create-info> flags::<int>) ::<int>
+  (expr "info->flags = flags"))
+
+(define-cproc vk-semaphore-create-info-flags
+  (info::<vk-semaphore-create-info>) ::<int>
+  (expr "info->flags"))
+
 ;; Local variables:
 ;; mode: scheme
 ;; end:

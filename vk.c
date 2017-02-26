@@ -18,6 +18,7 @@ ScmClass *VkSampleClass;
 ScmClass *VkClearValueClass;
 ScmClass *VkClearColorValueClass;
 ScmClass *VkClearDepthStencilValueClass;
+ScmClass *VkSemaphoreCreateInfoClass;
 
 ScmObj aho_aho(ScmObj a, ScmObj b)
 {
@@ -119,6 +120,21 @@ static void vk_clear_depth_stencil_value_cleanup(ScmObj obj)
     delete q;
 }
 
+// VkSemaphoreCreateInfo
+
+static void vk_semaphore_create_info_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
+{
+    VkSemaphoreCreateInfo *q = VKSEMAPHORECREATEINFO_UNBOX(obj);
+    Scm_Printf(out, "#<vk-semaphore-create-info \"%p\">", q);
+}
+
+static void vk_semaphore_create_info_cleanup(ScmObj obj)
+{
+    VkSemaphoreCreateInfo *q;
+    q = VKSEMAPHORECREATEINFO_UNBOX(obj);
+    delete q;
+}
+
 void Scm_Init_vk(void)
 {
     ScmModule *mod;
@@ -151,6 +167,12 @@ void Scm_Init_vk(void)
         Scm_MakeForeignPointerClass(mod, "<vk-clear-depth-stencil-value>",
                                     vk_clear_depth_stencil_value_print,
                                     vk_clear_depth_stencil_value_cleanup,
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+
+    VkSemaphoreCreateInfoClass =
+        Scm_MakeForeignPointerClass(mod, "<vk-semaphore-create-info>",
+                                    vk_semaphore_create_info_print,
+                                    vk_semaphore_create_info_cleanup,
                                     SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
 
     /* Register stub-generated procedures */
