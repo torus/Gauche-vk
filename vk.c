@@ -83,120 +83,31 @@ ScmObj vk_sample_main_destroy(sample_info *ptr)
  */
 extern void Scm_Init_vklib(ScmModule*);
 
-static void vk_sample_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-  sample_info *q = VKSAMPLE_UNBOX(obj);
-  Scm_Printf(out, "#<vk-sample \"%p\">", q);
+#define CLASS_PROCEDURE(ctype, scmtype, uppercase, lowercase)           \
+static void lowercase ## _print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx) \
+{                                                                       \
+    ctype *q = uppercase ## _UNBOX(obj);                                \
+    Scm_Printf(out, "#<" #scmtype " \"%p\">", q);                       \
+}                                                                       \
+                                                                        \
+static void lowercase ## _cleanup(ScmObj obj)                           \
+{                                                                       \
+    ctype *q;                                                           \
+    q = uppercase ## _UNBOX(obj);                                       \
+    delete q;                                                           \
 }
 
-static void vk_sample_cleanup(ScmObj obj)
-{
-  sample_info *q;
-  q = VKSAMPLE_UNBOX(obj);
-  delete q;
-}
-
-// VkClearValue
-static void vk_clear_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkClearValue *q = VKCLEARVALUE_UNBOX(obj);
-    Scm_Printf(out, "#<vk-clear-value \"%p\">", q);
-}
-
-static void vk_clear_value_cleanup(ScmObj obj)
-{
-    VkClearValue *q;
-    q = VKCLEARVALUE_UNBOX(obj);
-    delete q;
-}
-
-// VkClearColorValue
-static void vk_clear_color_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkClearColorValue *q = VKCLEARCOLORVALUE_UNBOX(obj);
-    Scm_Printf(out, "#<vk-clear-color-value \"%p\">", q);
-}
-
-static void vk_clear_color_value_cleanup(ScmObj obj)
-{
-    VkClearColorValue *q;
-    q = VKCLEARCOLORVALUE_UNBOX(obj);
-    delete q;
-}
-
-// VkClearDepthStencilValue
-static void vk_clear_depth_stencil_value_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkClearDepthStencilValue *q = VKCLEARDEPTHSTENCILVALUE_UNBOX(obj);
-    Scm_Printf(out, "#<vk-clear-depth-stencil-value \"%p\">", q);
-}
-
-static void vk_clear_depth_stencil_value_cleanup(ScmObj obj)
-{
-    VkClearDepthStencilValue *q;
-    q = VKCLEARDEPTHSTENCILVALUE_UNBOX(obj);
-    delete q;
-}
-
-// VkSemaphoreCreateInfo
-
-static void vk_semaphore_create_info_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkSemaphoreCreateInfo *q = VKSEMAPHORECREATEINFO_UNBOX(obj);
-    Scm_Printf(out, "#<vk-semaphore-create-info \"%p\">", q);
-}
-
-static void vk_semaphore_create_info_cleanup(ScmObj obj)
-{
-    VkSemaphoreCreateInfo *q;
-    q = VKSEMAPHORECREATEINFO_UNBOX(obj);
-    delete q;
-}
-
-// VkSemaphore
-
-static void vk_semaphore_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkSemaphore *q = VKSEMAPHORE_UNBOX(obj);
-    Scm_Printf(out, "#<vk-semaphore \"%p\">", q);
-}
-
-static void vk_semaphore_cleanup(ScmObj obj)
-{
-    VkSemaphore *q;
-    q = VKSEMAPHORE_UNBOX(obj);
-    delete q;
-}
-
-// VkDevice
-
-static void vk_device_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkDevice *q = VKDEVICE_UNBOX(obj);
-    Scm_Printf(out, "#<vk-device \"%p\">", q);
-}
-
-static void vk_device_cleanup(ScmObj obj)
-{
-    VkDevice *q;
-    q = VKDEVICE_UNBOX(obj);
-    delete q;
-}
-
-// VkAllocationCallbacks
-
-static void vk_allocation_callbacks_print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx)
-{
-    VkAllocationCallbacks *q = VKALLOCATIONCALLBACKS_UNBOX(obj);
-    Scm_Printf(out, "#<vk-allocation-callbacks \"%p\">", q);
-}
-
-static void vk_allocation_callbacks_cleanup(ScmObj obj)
-{
-    VkAllocationCallbacks *q;
-    q = VKALLOCATIONCALLBACKS_UNBOX(obj);
-    delete q;
-}
+CLASS_PROCEDURE(sample_info, vk-sample, VKSAMPLE, vk_sample)
+CLASS_PROCEDURE(VkClearValue, vk-clear-value, VKCLEARVALUE, vk_clear_value)
+CLASS_PROCEDURE(VkClearColorValue, vk-clear-color-value, VKCLEARCOLORVALUE, vk_clear_color_value)
+CLASS_PROCEDURE(VkClearDepthStencilValue, vk-clear-depth-stencil-value,
+                VKCLEARDEPTHSTENCILVALUE, vk_clear_depth_stencil_value)
+CLASS_PROCEDURE(VkSemaphoreCreateInfo, vk-semaphore-create-info,
+                VKSEMAPHORECREATEINFO, vk_semaphore_create_info)
+CLASS_PROCEDURE(VkSemaphore, vk-semaphore, VKSEMAPHORE, vk_semaphore)
+CLASS_PROCEDURE(VkDevice, vk-device, VKDEVICE, vk_device)
+CLASS_PROCEDURE(VkAllocationCallbacks, vk-allocation-callbacks,
+                VKALLOCATIONCALLBACKS, vk_allocation_callbacks)
 
 
 
