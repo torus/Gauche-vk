@@ -109,7 +109,17 @@ CLASS_PROCEDURE(VkDevice, vk-device, VKDEVICE, vk_device)
 CLASS_PROCEDURE(VkAllocationCallbacks, vk-allocation-callbacks,
                 VKALLOCATIONCALLBACKS, vk_allocation_callbacks)
 
+#undef CLASS_PROCEDURE
 
+
+#define MAKE_CLASS(cls, scmtype, lowercase)                             \
+do {                                                                    \
+    cls =                                                               \
+        Scm_MakeForeignPointerClass(mod, "<" #scmtype ">",              \
+                                    lowercase ## _print,                \
+                                    lowercase ## _cleanup,              \
+                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL); \
+ } while (0)
 
 void Scm_Init_vk(void)
 {
@@ -121,55 +131,19 @@ void Scm_Init_vk(void)
     /* Create the module if it doesn't exist yet. */
     mod = SCM_MODULE(SCM_FIND_MODULE("vk", TRUE));
 
-    VkSampleClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-sample>",
-                                    vk_sample_print,
-                                    vk_sample_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkClearValueClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-clear-value>",
-                                    vk_clear_value_print,
-                                    vk_clear_value_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkClearColorValueClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-clear-color-value>",
-                                    vk_clear_color_value_print,
-                                    vk_clear_color_value_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkClearDepthStencilValueClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-clear-depth-stencil-value>",
-                                    vk_clear_depth_stencil_value_print,
-                                    vk_clear_depth_stencil_value_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkSemaphoreCreateInfoClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-semaphore-create-info>",
-                                    vk_semaphore_create_info_print,
-                                    vk_semaphore_create_info_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkSemaphoreClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-semaphore>",
-                                    vk_semaphore_print,
-                                    vk_semaphore_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkDeviceClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-device>",
-                                    vk_device_print,
-                                    vk_device_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
-
-    VkAllocationCallbacksClass =
-        Scm_MakeForeignPointerClass(mod, "<vk-allocation-callbacks>",
-                                    vk_allocation_callbacks_print,
-                                    vk_allocation_callbacks_cleanup,
-                                    SCM_FOREIGN_POINTER_KEEP_IDENTITY|SCM_FOREIGN_POINTER_MAP_NULL);
+    MAKE_CLASS(VkSampleClass, vk-sample, vk_sample);
+    MAKE_CLASS(VkClearValueClass, vk-clear-value, vk_clear_value);
+    MAKE_CLASS(VkClearColorValueClass, vk-clear-color-value, vk_clear_color_value);
+    MAKE_CLASS(VkClearDepthStencilValueClass, vk-clear-depth-stencil-value,
+               vk_clear_depth_stencil_value);
+    MAKE_CLASS(VkSemaphoreCreateInfoClass, vk-semaphore-create-info, vk_semaphore_create_info);
+    MAKE_CLASS(VkSemaphoreClass, vk-semaphore, vk_semaphore);
+    MAKE_CLASS(VkDeviceClass, vk-device, vk_device);
+    MAKE_CLASS(VkAllocationCallbacksClass, vk-allocation-callbacks, vk_allocation_callbacks);
 
     /* Register stub-generated procedures */
     Scm_Init_vklib(mod);
 
 }
+
+#undef MAKE_CLASS
