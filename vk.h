@@ -30,7 +30,7 @@ extern ScmObj vk_sample_main_destroy(sample_info *ptr);
 
 #define DECLARE_CLASS(cls, ctype, uppercase)    \
 extern ScmClass *cls;                           \
- int uppercase ## _P(ScmObj obj);               \
+int uppercase ## _P(ScmObj obj);                \
 ctype* uppercase ## _UNBOX(ScmObj obj);         \
 ScmObj uppercase ## _BOX(ctype *ptr);
 
