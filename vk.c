@@ -83,7 +83,7 @@ ScmObj vk_sample_main_destroy(sample_info *ptr)
  */
 extern void Scm_Init_vklib(ScmModule*);
 
-#define CLASS_PROCEDURE(ctype, scmtype, uppercase, lowercase)           \
+#define CLASS_PROCEDURE(cls, ctype, scmtype, uppercase, lowercase)      \
 static void lowercase ## _print(ScmObj obj, ScmPort *out, ScmWriteContext *ctx) \
 {                                                                       \
     ctype *q = uppercase ## _UNBOX(obj);                                \
@@ -95,18 +95,22 @@ static void lowercase ## _cleanup(ScmObj obj)                           \
     ctype *q;                                                           \
     q = uppercase ## _UNBOX(obj);                                       \
     delete q;                                                           \
-}
+}                                                                       \
+int uppercase ## _P(ScmObj obj) { return SCM_XTYPEP(obj, cls); }        \
+ctype* uppercase ## _UNBOX(ScmObj obj) { return SCM_FOREIGN_POINTER_REF(ctype*, obj); } \
+ScmObj uppercase ## _BOX(ctype *ptr) { return Scm_MakeForeignPointer(cls, ptr); }
 
-CLASS_PROCEDURE(sample_info, vk-sample, VKSAMPLE, vk_sample)
-CLASS_PROCEDURE(VkClearValue, vk-clear-value, VKCLEARVALUE, vk_clear_value)
-CLASS_PROCEDURE(VkClearColorValue, vk-clear-color-value, VKCLEARCOLORVALUE, vk_clear_color_value)
-CLASS_PROCEDURE(VkClearDepthStencilValue, vk-clear-depth-stencil-value,
+CLASS_PROCEDURE(VkSampleClass, sample_info, vk-sample, VKSAMPLE, vk_sample)
+CLASS_PROCEDURE(VkClearValueClass, VkClearValue, vk-clear-value, VKCLEARVALUE, vk_clear_value)
+CLASS_PROCEDURE(VkClearColorValueClass, VkClearColorValue,
+                vk-clear-color-value, VKCLEARCOLORVALUE, vk_clear_color_value)
+CLASS_PROCEDURE(VkClearDepthStencilValueClass, VkClearDepthStencilValue, vk-clear-depth-stencil-value,
                 VKCLEARDEPTHSTENCILVALUE, vk_clear_depth_stencil_value)
-CLASS_PROCEDURE(VkSemaphoreCreateInfo, vk-semaphore-create-info,
+CLASS_PROCEDURE(VkSemaphoreCreateInfoClass, VkSemaphoreCreateInfo, vk-semaphore-create-info,
                 VKSEMAPHORECREATEINFO, vk_semaphore_create_info)
-CLASS_PROCEDURE(VkSemaphore, vk-semaphore, VKSEMAPHORE, vk_semaphore)
-CLASS_PROCEDURE(VkDevice, vk-device, VKDEVICE, vk_device)
-CLASS_PROCEDURE(VkAllocationCallbacks, vk-allocation-callbacks,
+CLASS_PROCEDURE(VkSemaphoreClass, VkSemaphore, vk-semaphore, VKSEMAPHORE, vk_semaphore)
+CLASS_PROCEDURE(VkDeviceClass, VkDevice, vk-device, VKDEVICE, vk_device)
+CLASS_PROCEDURE(VkAllocationCallbacksClass, VkAllocationCallbacks, vk-allocation-callbacks,
                 VKALLOCATIONCALLBACKS, vk_allocation_callbacks)
 
 #undef CLASS_PROCEDURE
