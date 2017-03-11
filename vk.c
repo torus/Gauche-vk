@@ -22,6 +22,8 @@ ScmClass *VkSemaphoreCreateInfoClass;
 ScmClass *VkSemaphoreClass;
 ScmClass *VkDeviceClass;
 ScmClass *VkAllocationCallbacksClass;
+ScmClass *VkSwapchainKHRClass;
+ScmClass *VkFenceClass;
 
 ScmObj aho_aho(ScmObj a, ScmObj b)
 {
@@ -78,6 +80,29 @@ ScmObj vk_sample_main_destroy(sample_info *ptr)
     return SCM_NIL;
 }
 
+ScmObj wrap_vkAcquireNextImageKHR(
+    VkDevice                                    *device,
+    VkSwapchainKHR                              *swapchain,
+    uint64_t                                    timeout,
+    VkSemaphore                                 *semaphore,
+    VkFence                                     *fence)
+{
+    VkResult res;
+    uint32_t imageIndex;
+
+    res = vkAcquireNextImageKHR(*device,
+                                *swapchain,
+                                timeout,
+                                *semaphore,
+                                *fence,
+                                &imageIndex);
+    return Scm_MakeIntegerU(imageIndex);
+}
+
+
+
+
+
 /*
  * Module initialization function.
  */
@@ -112,6 +137,11 @@ CLASS_PROCEDURE(VkSemaphoreClass, VkSemaphore, vk-semaphore, VKSEMAPHORE, vk_sem
 CLASS_PROCEDURE(VkDeviceClass, VkDevice, vk-device, VKDEVICE, vk_device)
 CLASS_PROCEDURE(VkAllocationCallbacksClass, VkAllocationCallbacks, vk-allocation-callbacks,
                 VKALLOCATIONCALLBACKS, vk_allocation_callbacks)
+CLASS_PROCEDURE(VkSwapchainKHRClass, VkSwapchainKHR, vk-swapchain-khr,
+                VKSWAPCHAINKHR, vk_swapchain_khr)
+CLASS_PROCEDURE(VkFenceClass, VkFence, vk-fence, VKFENCE, vk_fence)
+
+
 
 #undef CLASS_PROCEDURE
 
@@ -144,6 +174,9 @@ void Scm_Init_vk(void)
     MAKE_CLASS(VkSemaphoreClass, vk-semaphore, vk_semaphore);
     MAKE_CLASS(VkDeviceClass, vk-device, vk_device);
     MAKE_CLASS(VkAllocationCallbacksClass, vk-allocation-callbacks, vk_allocation_callbacks);
+    MAKE_CLASS(VkSwapchainKHRClass, vk-swapchain-khr, vk_swapchain_khr);
+    MAKE_CLASS(VkFenceClass, vk-fence, vk_fence);
+
 
     /* Register stub-generated procedures */
     Scm_Init_vklib(mod);

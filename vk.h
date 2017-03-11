@@ -27,6 +27,13 @@ extern ScmObj vk_sample_main_body(sample_info *ptr);
 extern ScmObj vk_sample_main_body_x(sample_info *ptr, ScmObj clrvals, VkSemaphore *sem);
 extern ScmObj vk_sample_main_destroy(sample_info *ptr);
 
+extern ScmObj wrap_vkAcquireNextImageKHR(
+    VkDevice                                    *device,
+    VkSwapchainKHR                              *swapchain,
+    uint64_t                                    timeout,
+    VkSemaphore                                 *semaphore,
+    VkFence                                     *fence);
+
 
 #define DECLARE_CLASS(cls, ctype, uppercase)    \
 extern ScmClass *cls;                           \
@@ -42,7 +49,9 @@ DECLARE_CLASS(VkSemaphoreCreateInfoClass, VkSemaphoreCreateInfo, VKSEMAPHORECREA
 DECLARE_CLASS(VkSemaphoreClass, VkSemaphore, VKSEMAPHORE)
 DECLARE_CLASS(VkDeviceClass, VkDevice, VKDEVICE)
 DECLARE_CLASS(VkAllocationCallbacksClass, VkAllocationCallbacks, VKALLOCATIONCALLBACKS)
-
+DECLARE_CLASS(VkSwapchainKHRClass, VkSwapchainKHR, VKSWAPCHAINKHR)
+DECLARE_CLASS(VkSwapchainKHRClass, VkSwapchainKHR, VKSWAPCHAINKHR)
+DECLARE_CLASS(VkFenceClass, VkFence, VKFENCE)
 
 void Scm_Init_vk(void);
 

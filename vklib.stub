@@ -69,6 +69,8 @@
 (define-cproc make-vk-clear-depth-stencil-value () ::<vk-clear-depth-stencil-value>
   (expr "new VkClearDepthStencilValue()"))
 
+;;;;;;;;;;;;;;;;;;
+
 (define-cproc vk-clear-depth-stencil-value-depth-set!
   (depste::<vk-clear-depth-stencil-value> val::<float>) ::<float>
   (expr "depste->depth = val"))
@@ -142,6 +144,16 @@
   "VKALLOCATIONCALLBACKS_P" "VKALLOCATIONCALLBACKS_UNBOX" "VKALLOCATIONCALLBACKS_BOX")
 
 
+;; <vk-swapchaing-khr>
+(define-type <vk-swapchain-khr> "VkSwapchainKHR*" "VkSwapchainKHR"
+  "VKSWAPCHAINKHR_P" "VKSWAPCHAINKHR_UNBOX" "VKSWAPCHAINKHR_BOX")
+
+;; <vk-fence>
+(define-type <vk-fence> "VkFence*" "VkFence"
+  "VKFENCE_P" "VKFENCE_UNBOX" "VKFENCE_BOX")
+
+;;;
+
 (define-cproc make-vk-semaphore () ::<vk-semaphore>
   (expr "new VkSemaphore()"))
 
@@ -149,6 +161,24 @@
   (dev::<vk-device> info::<vk-semaphore-create-info>
                     alloc::<vk-allocation-callbacks>? sem::<vk-semaphore>) ::<int>
   (expr "(int)vkCreateSemaphore(*dev, info, alloc, sem)"))
+
+
+;;;;;
+
+;; VKAPI_ATTR VkResult VKAPI_CALL vkAcquireNextImageKHR(
+;;     VkDevice                                    device,
+;;     VkSwapchainKHR                              swapchain,
+;;     uint64_t                                    timeout,
+;;     VkSemaphore                                 semaphore,
+;;     VkFence                                     fence,
+;;     uint32_t*                                   pImageIndex)
+
+(define-cproc vk-acquire-next-image-khr (device::<vk-device>
+                                         swacpchane::<vk-swapchain-khr>
+                                         timeout::<uint>
+                                         semaphore::<vk-semaphore>
+                                         fence::<vk-fence>)
+  wrap_vkAcquireNextImageKHR)
 
 
 ;;;;;;
