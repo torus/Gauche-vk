@@ -15,6 +15,7 @@
 (let ((mat
        (sxml-match
         (lambda (M C)
+          (dbg "----")
           (M 'root (C (M 'c1 (lambda (c) (dbg #`"c1 ,(car c)") #t))
                       (M 'c2 (lambda (c) (dbg #`"c2 ,(car c)") #t))
                       (M 'c3 (lambda (c) (dbg #`"c3 ,(car c)") #t)
@@ -32,11 +33,8 @@
                "  </c3>"
                "</root>"))
          (sxml (ssax:xml->sxml (open-input-string xml) ())))
-    (dbg sxml)
-    (dbg "---\n")
 
     (test* "positive"  #f (not (mat (cadr sxml))))
-    (dbg "\n")
     )
 
 
@@ -44,14 +42,10 @@
                              (c3 (@ (n 2)) (c31) (c32)))))
 
   (test* "extra tags"  #f (not (mat '(root (x) (c1) (c2) (c3 (c31) (c32))))))
-  (dbg "\n")
 
   (test* "wrong tag" #f (mat '(root (x)  (c2) (c3 (c31) (c32)))))
-  (dbg "\n")
   (test* "wrong tag" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
-  (dbg "\n")
   (test* "missing tag" #f (mat '(root (c1)      (c3 (c31) (c32)))))
-  (dbg "\n")
 
   (test* "multiple match"  #f
          (not (mat '(root (c1) (c2 (@ (n 1))) (c2 (@ (n 2)))
