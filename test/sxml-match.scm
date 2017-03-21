@@ -34,24 +34,18 @@
                "</root>"))
          (sxml (ssax:xml->sxml (open-input-string xml) ())))
 
-    (test* "positive"  #f (not (mat (cadr sxml))))
-    )
-
-
-  (dbg (srl:sxml->xml '(root (c1) (c2 (@ (n 1)))
-                             (c3 (@ (n 2)) (c31) (c32)))))
+    (test* "positive"  #f (not (mat (cadr sxml)))))
 
   (test* "extra tags"  #f (not (mat '(root (x) (c1) (c2) (c3 (c31) (c32))))))
 
-  (test* "wrong tag" #f (mat '(root (x)  (c2) (c3 (c31) (c32)))))
-  (test* "wrong tag" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
-  (test* "missing tag" #f (mat '(root (c1)      (c3 (c31) (c32)))))
+  (test* "fails when a wrong element" #f (mat '(root (x)  (c2) (c3 (c31) (c32)))))
+  (test* "fails when a wrong element" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
+  (test* "fails when a element is missing" #f (mat '(root (c1) (c3 (c31) (c32)))))
 
-  (test* "multiple match"  #f
+  (test* "ignores extra elements"  #f
          (not (mat '(root (c1) (c2 (@ (n 1))) (c2 (@ (n 2)))
                           (c3 (@ (n 1)) (c31) (c32))
                           (c3 (@ (n 2)) (c31) (c32))))))
-
   )
 
 
