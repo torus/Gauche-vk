@@ -6,13 +6,6 @@
 (use sxml-match)
 (test-module 'sxml-match)
 
-(define *debug-port* (open-output-string))
-(define (dbg . rest)
-  (with-output-to-port *debug-port*
-    (lambda ()
-      (apply print rest))))
-
-
 ((sxml-match (lambda (M C C*) (M 'a))) '(a))
 
 (test* "single tag" '(a) ((sxml-match (lambda (M C C*) (M 'a))) '(a)))
@@ -22,12 +15,11 @@
 (let ((mat
        (sxml-match
         (lambda (M C C*)
-          (dbg "----")
-          (M 'root (C (M 'c1 (lambda (c) (dbg #`"c1 ,(car c)") ()))
-                      (M 'c2 (lambda (c) (dbg #`"c2 ,(car c)") ()))
-                      (M 'c3 (lambda (c) (dbg #`"c3 ,(car c)") ())
-                         (C (M 'c31 (lambda (c) (dbg #`"c31 ,(car c)") ()))
-                            (M 'c32 (lambda (c) (dbg #`"c32 ,(car c)") ())))))
+          (M 'root (C (M 'c1)
+                      (M 'c2)
+                      (M 'c3
+                         (C (M 'c31)
+                            (M 'c32))))
              )))))
 
   (let* ((xml (string-append
@@ -57,18 +49,12 @@
                      (c3 (@ (n "2")) (c31) (c32)))))
 
   (test* "multiple match"
-         '(root (c1 (c2 (@ (n 1))
-                        (c3 (@ (m 1))))
-                    (c2 (@ (n 2))
-                        (c3 (@ (m 2))))
-                    (c2 (@ (n 3))
-                        (c3 (@ (m 3))))))
-         (let ((doc '(root (c1 (c2 (@ (n 1))
-                                   (c3 (@ (m 1))))
-                               (c2 (@ (n 2))
-                                   (c3 (@ (m 2))))
-                               (c2 (@ (n 3))
-                                   (c3 (@ (m 3)))))))
+         '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
+                    (c2 (@ (n "2")) (c3 (@ (m "2"))))
+                    (c2 (@ (n "3")) (c3 (@ (m "3"))))))
+         (let ((doc '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
+                               (c2 (@ (n "2")) (c3 (@ (m "2"))))
+                               (c2 (@ (n "3")) (c3 (@ (m "3")) (c4))))))
                (mat
                 (sxml-match
                  (lambda (M C C*)
@@ -78,18 +64,18 @@
            (mat doc)
            ))
 
-  (test* "multiple multiple match" '(root (c1 (c2 (@ (n 1)) (c3 (@ (m 1))))
-                                              (c4 (@ (n 1)))
-                                              (c2 (@ (n 2)) (c3 (@ (m 2))))
-                                              (c4 (@ (n 2)))
-                                              (c2 (@ (n 3)) (c3 (@ (m 3))))))
-         (let ((doc '(root (c1 (c2 (@ (n 1)) (c3 (@ (m 1))))
-                               (c4 (@ (n 1)))
-                               (c2 (@ (n 2)) (c3 (@ (m 2))))
+  (test* "multiple multiple match" '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
+                                              (c4 (@ (n "1")))
+                                              (c2 (@ (n "2")) (c3 (@ (m "2"))))
+                                              (c4 (@ (n "2")))
+                                              (c2 (@ (n "3")) (c3 (@ (m "3"))))))
+         (let ((doc '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
+                               (c4 (@ (n "1")))
+                               (c2 (@ (n "2")) (c3 (@ (m "2"))))
                                (c5)
-                               (c4 (@ (n 2)))
+                               (c4 (@ (n "2")))
                                (c5)
-                               (c2 (@ (n 3)) (c3 (@ (m 3)))))))
+                               (c2 (@ (n "3")) (c3 (@ (m "3")))))))
                (mat
                 (sxml-match
                  (lambda (M C C*)
@@ -101,5 +87,4 @@
            ))
   )
 
-
-;(display (get-output-string *debug-port*))
+(test-end)
