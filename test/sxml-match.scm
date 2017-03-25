@@ -51,10 +51,10 @@
   (test* "fails when a wrong element" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
   (test* "fails when a element is missing" #f (mat '(root (c1) (c3 (c31) (c32)))))
 
-  (test* "ignores extra elements"  #f
-         (not (mat '(root (c1) (c2 (@ (n 1))) (c2 (@ (n 2)))
-                          (c3 (@ (n 1)) (c31) (c32))
-                          (c3 (@ (n 2)) (c31) (c32))))))
+  (test* "ignores extra elements"  '(root (c1) (c2 (@ (n "1"))) (c3 (@ (n "1")) (c31) (c32)))
+         (mat '(root (c1) (c2 (@ (n "1"))) (c2 (@ (n "2")))
+                     (c3 (@ (n "1")) (c31) (c32))
+                     (c3 (@ (n "2")) (c31) (c32)))))
   )
 
 
