@@ -7,41 +7,53 @@
 (use sxml.ssax)
 
 
+(define (children e)
+  (match e
+         ((_ ('@ attr ...) c ...)
+          (cddr e))
+         ((_  c ...)
+          (cdr e))))
+
+(define (element e)
+  (match e
+         ((_ ('@ attr ...) c ...)
+          (take e 2))
+         ((_  c ...)
+          (take e 1))))
+
 (define (M tag . procs)
   (define (tag=? children)
     (let ((tagname (caar children)))
-      (eq? tagname tag)))
+      (if (eq? tagname tag)
+          ()
+          #f)))
 
-  (lambda (e)
-    (let loop ((procs (cons tag=? procs)))
+  (lambda (elems)
+    (let loop ((procs (cons tag=? procs)) (children ()))
       (if (null? procs)
-          #t
-          (if ((car procs) e)
-              (loop (cdr procs))
-              #f)))))
+          (append (element (car elems)) (reverse children))
+          (let ((result ((car procs) elems)))
+            (if result
+                (loop (cdr procs) (append result children))
+                #f))))))
 
 (define (C . procs)
-  (define (children e)
-    (match e
-           ((_ ('@ attr ...) c ...)
-            (cddr e))
-           ((_  c ...)
-            (cdr e))))
-
   (define (match-any proc children)
     (if (null? children)
         #f
-        (if (proc children)
-            #t
-            (match-any proc (cdr children)))))
+        (let ((result (proc children)))
+          (if result
+              result
+              (match-any proc (cdr children))))))
 
   (lambda (e)
-    (let loop ((procs procs))
+    (let loop ((procs procs) (elems ()))
       (if (null? procs)
-          #t
-          (if (match-any (car procs) (children (car e)))
-              (loop (cdr procs))
-              #f)))))
+          elems
+          (let ((matched (match-any (car procs) (children (car e)))))
+            (if matched
+                (loop (cdr procs) (cons matched elems))
+                #f))))))
 
 (define (sxml-match proc)
   (lambda (e)

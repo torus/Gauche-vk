@@ -12,15 +12,22 @@
     (lambda ()
       (apply print rest))))
 
+
+((sxml-match (lambda (M C) (M 'a))) '(a))
+
+(test* "single tag" '(a) ((sxml-match (lambda (M C) (M 'a))) '(a)))
+(test* "single tag with attributes" '(a (@ (n "1")))
+       ((sxml-match (lambda (M C) (M 'a))) '(a (@ (n "1")))))
+
 (let ((mat
        (sxml-match
         (lambda (M C)
           (dbg "----")
-          (M 'root (C (M 'c1 (lambda (c) (dbg #`"c1 ,(car c)") #t))
-                      (M 'c2 (lambda (c) (dbg #`"c2 ,(car c)") #t))
-                      (M 'c3 (lambda (c) (dbg #`"c3 ,(car c)") #t)
-                         (C (M 'c31 (lambda (c) (dbg #`"c31 ,(car c)") #t))
-                            (M 'c32 (lambda (c) (dbg #`"c32 ,(car c)") #t)))))
+          (M 'root (C (M 'c1 (lambda (c) (dbg #`"c1 ,(car c)") ()))
+                      (M 'c2 (lambda (c) (dbg #`"c2 ,(car c)") ()))
+                      (M 'c3 (lambda (c) (dbg #`"c3 ,(car c)") ())
+                         (C (M 'c31 (lambda (c) (dbg #`"c31 ,(car c)") ()))
+                            (M 'c32 (lambda (c) (dbg #`"c32 ,(car c)") ())))))
              )))))
 
   (let* ((xml (string-append
@@ -34,9 +41,11 @@
                "</root>"))
          (sxml (ssax:xml->sxml (open-input-string xml) ())))
 
-    (test* "positive"  #f (not (mat (cadr sxml)))))
+    (test* "positive" '(root (c1) (c2 (@ (n "1"))) (c3 (@ (n "2")) (c31) (c32)))
+           (mat (cadr sxml))))
 
-  (test* "extra tags"  #f (not (mat '(root (x) (c1) (c2) (c3 (c31) (c32))))))
+  (test* "extra tags" '(root (c1) (c2) (c3 (c31) (c32)))
+         (mat '(root (x) (c1) (c2) (c3 (c31) (c32)))))
 
   (test* "fails when a wrong element" #f (mat '(root (x)  (c2) (c3 (c31) (c32)))))
   (test* "fails when a wrong element" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
@@ -49,4 +58,4 @@
   )
 
 
-(display (get-output-string *debug-port*))
+;(display (get-output-string *debug-port*))
