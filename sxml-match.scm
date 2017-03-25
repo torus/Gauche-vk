@@ -55,6 +55,28 @@
                 (loop (cdr procs) (cons matched elems))
                 #f))))))
 
+(define (C* . procs)
+  (define (match-any procs child)
+    (if (null? procs)
+        #f
+        (let ((result ((car procs) child)))
+          (if result
+              result
+              (match-any (cdr procs) child))))
+    )
+  (lambda (e)
+    (let loop ((children (children (car e)))
+               (elems ()))
+      (if (null? children)
+          elems
+          (let ((matched (match-any procs children)))
+            (if matched
+                (loop (cdr children) (cons matched elems))
+                (loop (cdr children) elems)))
+          )
+      ))
+  )
+
 (define (sxml-match proc)
   (lambda (e)
-    ((proc M C) (list e))))
+    ((proc M C C*) (list e))))

@@ -13,15 +13,15 @@
       (apply print rest))))
 
 
-((sxml-match (lambda (M C) (M 'a))) '(a))
+((sxml-match (lambda (M C C*) (M 'a))) '(a))
 
-(test* "single tag" '(a) ((sxml-match (lambda (M C) (M 'a))) '(a)))
+(test* "single tag" '(a) ((sxml-match (lambda (M C C*) (M 'a))) '(a)))
 (test* "single tag with attributes" '(a (@ (n "1")))
-       ((sxml-match (lambda (M C) (M 'a))) '(a (@ (n "1")))))
+       ((sxml-match (lambda (M C C*) (M 'a))) '(a (@ (n "1")))))
 
 (let ((mat
        (sxml-match
-        (lambda (M C)
+        (lambda (M C C*)
           (dbg "----")
           (M 'root (C (M 'c1 (lambda (c) (dbg #`"c1 ,(car c)") ()))
                       (M 'c2 (lambda (c) (dbg #`"c2 ,(car c)") ()))
@@ -55,6 +55,50 @@
          (mat '(root (c1) (c2 (@ (n "1"))) (c2 (@ (n "2")))
                      (c3 (@ (n "1")) (c31) (c32))
                      (c3 (@ (n "2")) (c31) (c32)))))
+
+  (test* "multiple match"
+         '(root (c1 (c2 (@ (n 1))
+                        (c3 (@ (m 1))))
+                    (c2 (@ (n 2))
+                        (c3 (@ (m 2))))
+                    (c2 (@ (n 3))
+                        (c3 (@ (m 3))))))
+         (let ((doc '(root (c1 (c2 (@ (n 1))
+                                   (c3 (@ (m 1))))
+                               (c2 (@ (n 2))
+                                   (c3 (@ (m 2))))
+                               (c2 (@ (n 3))
+                                   (c3 (@ (m 3)))))))
+               (mat
+                (sxml-match
+                 (lambda (M C C*)
+                   (M 'root (C (M 'c1
+                                  (C* (M 'c2
+                                         (C (M 'c3)))))))))))
+           (mat doc)
+           ))
+
+  (test* "multiple multiple match" '(root (c1 (c2 (@ (n 1)) (c3 (@ (m 1))))
+                                              (c4 (@ (n 1)))
+                                              (c2 (@ (n 2)) (c3 (@ (m 2))))
+                                              (c4 (@ (n 2)))
+                                              (c2 (@ (n 3)) (c3 (@ (m 3))))))
+         (let ((doc '(root (c1 (c2 (@ (n 1)) (c3 (@ (m 1))))
+                               (c4 (@ (n 1)))
+                               (c2 (@ (n 2)) (c3 (@ (m 2))))
+                               (c5)
+                               (c4 (@ (n 2)))
+                               (c5)
+                               (c2 (@ (n 3)) (c3 (@ (m 3)))))))
+               (mat
+                (sxml-match
+                 (lambda (M C C*)
+                   (M 'root (C (M 'c1
+                                  (C* (M 'c2
+                                         (C (M 'c3)))
+                                      (M 'c4)))))))))
+           (mat doc)
+           ))
   )
 
 
