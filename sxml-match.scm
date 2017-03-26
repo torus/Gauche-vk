@@ -26,9 +26,7 @@
 (define (M tag . procs)
   (define (tag=? elem)
     (let ((tagname (sxml:name elem)))
-      (if (eq? tagname tag)
-          ()
-          #f)))
+      (eq? tagname tag)))
 
   (lambda (elem)
     (let loop ((procs (cons tag=? procs)) (children ()))
