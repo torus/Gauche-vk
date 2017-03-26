@@ -17,6 +17,12 @@
          ((_  c ...)
           (take e 1))))
 
+(define (test-condition proc elem)
+  (let ((result (proc elem)))
+    (if (eq? #t result)
+        ()
+        result)))
+
 (define (M tag . procs)
   (define (tag=? elem)
     (let ((tagname (sxml:name elem)))
@@ -28,7 +34,7 @@
     (let loop ((procs (cons tag=? procs)) (children ()))
       (if (null? procs)
           (append (isolate-element elem) (reverse children))
-          (let ((result ((car procs) elem)))
+          (let ((result (test-condition (car procs) elem)))
             (if result
                 (loop (cdr procs) (append result children))
                 #f))))))
@@ -37,7 +43,7 @@
   (define (match-any proc children)
     (if (null? children)
         #f
-        (let ((result (proc (car children))))
+        (let ((result (test-condition proc (car children))))
           (if result
               result
               (match-any proc (cdr children))))))
@@ -55,7 +61,7 @@
   (define (match-any procs child)
     (if (null? procs)
         #f
-        (let ((result ((car procs) child)))
+        (let ((result (test-condition (car procs) child)))
           (if result
               result
               (match-any (cdr procs) child)))))

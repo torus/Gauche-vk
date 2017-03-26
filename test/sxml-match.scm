@@ -144,9 +144,9 @@
 (let ((mat (sxml-match
             (lambda (M C C*)
               (M 'cdecl (C (M 'attributelist
-                              (C (M 'attribute (lambda (e) (if (string=? "name" (sxml:attr e 'name)) () #f)))
-                                 (M 'attribute (lambda (e) (if (string=? "kind" (sxml:attr e 'name)) () #f)))
-                                 (M 'attribute (lambda (e) (if (string=? "type" (sxml:attr e 'name)) () #f)))
+                              (C (M 'attribute (lambda (e) (string=? "name" (sxml:attr e 'name))))
+                                 (M 'attribute (lambda (e) (string=? "kind" (sxml:attr e 'name))))
+                                 (M 'attribute (lambda (e) (string=? "type" (sxml:attr e 'name))))
                                  (M 'parmlist
                                     (C* (M 'parm (C (M 'attributelist (C* (M 'attribute)))))))
                                  )))
