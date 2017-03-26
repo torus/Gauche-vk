@@ -5,7 +5,7 @@
 
 (use util.match)
 (use sxml.ssax)
-
+(use sxml.tools)
 
 (define (children e)
   (match e
@@ -14,7 +14,7 @@
          ((_  c ...)
           (cdr e))))
 
-(define (element e)
+(define (isolate-element e)
   (match e
          ((_ ('@ attr ...) c ...)
           (take e 2))
@@ -22,17 +22,17 @@
           (take e 1))))
 
 (define (M tag . procs)
-  (define (tag=? children)
-    (let ((tagname (caar children)))
+  (define (tag=? elem)
+    (let ((tagname (sxml:name elem)))
       (if (eq? tagname tag)
           ()
           #f)))
 
-  (lambda (elems)
+  (lambda (elem)
     (let loop ((procs (cons tag=? procs)) (children ()))
       (if (null? procs)
-          (append (element (car elems)) (reverse children))
-          (let ((result ((car procs) elems)))
+          (append (isolate-element elem) (reverse children))
+          (let ((result ((car procs) elem)))
             (if result
                 (loop (cdr procs) (append result children))
                 #f))))))
@@ -41,7 +41,7 @@
   (define (match-any proc children)
     (if (null? children)
         #f
-        (let ((result (proc children)))
+        (let ((result (proc (car children))))
           (if result
               result
               (match-any proc (cdr children))))))
@@ -50,7 +50,7 @@
     (let loop ((procs procs) (elems ()))
       (if (null? procs)
           elems
-          (let ((matched (match-any (car procs) (children (car e)))))
+          (let ((matched (match-any (car procs) (children e))))
             (if matched
                 (loop (cdr procs) (cons matched elems))
                 #f))))))
@@ -62,21 +62,17 @@
         (let ((result ((car procs) child)))
           (if result
               result
-              (match-any (cdr procs) child))))
-    )
+              (match-any (cdr procs) child)))))
   (lambda (e)
-    (let loop ((children (children (car e)))
+    (let loop ((children (children e))
                (elems ()))
       (if (null? children)
           elems
-          (let ((matched (match-any procs children)))
+          (let ((matched (match-any procs (car children))))
             (if matched
                 (loop (cdr children) (cons matched elems))
-                (loop (cdr children) elems)))
-          )
-      ))
-  )
+                (loop (cdr children) elems)))))))
 
 (define (sxml-match proc)
   (lambda (e)
-    ((proc M C C*) (list e))))
+    ((proc M C C*) e)))
