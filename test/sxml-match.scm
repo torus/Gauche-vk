@@ -1,6 +1,7 @@
 (use gauche.test)
 (use sxml.serializer)
 (use sxml.ssax)
+(use sxml.tools)
 
 (test-start "sxml-match")
 (use sxml-match)
@@ -86,5 +87,106 @@
            (mat doc)
            ))
   )
+
+(define *xml*
+  (string-append
+   "<cdecl id=\"231565\" addr=\"0x7f547fd3a2b0\" >"
+   "    <attributelist id=\"231566\" addr=\"0x7f547fd3a2b0\" >"
+   "        <attribute name=\"sym_name\" value=\"vkAcquireNextImageKHR\" id=\"231567\" addr=\"0x7f547fcc01b0\" />"
+   "        <attribute name=\"name\" value=\"vkAcquireNextImageKHR\" id=\"231568\" addr=\"0x7f547fcc01b0\" />"
+   "        <attribute name=\"decl\" value=\"f(VkDevice,VkSwapchainKHR,uint64_t,VkSemaphore,VkFence,p.uint32_t).\" id=\"231569\" addr=\"0x7f547fcc01b0\" />"
+   "        <parmlist id=\"231570\" addr=\"0x7f547fd39c50\" >"
+   "            <parm id=\"231571\">"
+   "                <attributelist id=\"231572\" addr=\"0x7f547fd39c50\" >"
+   "                    <attribute name=\"name\" value=\"device\" id=\"231573\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"type\" value=\"VkDevice\" id=\"231574\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"compactdefargs\" value=\"1\" id=\"231575\" addr=\"0x7f547fcc01b0\" />"
+   "                </attributelist >"
+   "            </parm >"
+   "            <parm id=\"231576\">"
+   "                <attributelist id=\"231577\" addr=\"0x7f547fd39d70\" >"
+   "                    <attribute name=\"name\" value=\"swapchain\" id=\"231578\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"type\" value=\"VkSwapchainKHR\" id=\"231579\" addr=\"0x7f547fcc01b0\" />"
+   "                </attributelist >"
+   "            </parm >"
+   "            <parm id=\"231580\">"
+   "                <attributelist id=\"231581\" addr=\"0x7f547fd39e90\" >"
+   "                    <attribute name=\"name\" value=\"timeout\" id=\"231582\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"type\" value=\"uint64_t\" id=\"231583\" addr=\"0x7f547fcc01b0\" />"
+   "                </attributelist >"
+   "            </parm >"
+   "            <parm id=\"231584\">"
+   "                <attributelist id=\"231585\" addr=\"0x7f547fd39fb0\" >"
+   "                    <attribute name=\"name\" value=\"semaphore\" id=\"231586\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"type\" value=\"VkSemaphore\" id=\"231587\" addr=\"0x7f547fcc01b0\" />"
+   "                </attributelist >"
+   "            </parm >"
+   "            <parm id=\"231588\">"
+   "                <attributelist id=\"231589\" addr=\"0x7f547fd3a0d0\" >"
+   "                    <attribute name=\"name\" value=\"fence\" id=\"231590\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"type\" value=\"VkFence\" id=\"231591\" addr=\"0x7f547fcc01b0\" />"
+   "                </attributelist >"
+   "            </parm >"
+   "            <parm id=\"231592\">"
+   "                <attributelist id=\"231593\" addr=\"0x7f547fd3a1f0\" >"
+   "                    <attribute name=\"name\" value=\"pImageIndex\" id=\"231594\" addr=\"0x7f547fcc01b0\" />"
+   "                    <attribute name=\"type\" value=\"p.uint32_t\" id=\"231595\" addr=\"0x7f547fcc01b0\" />"
+   "                </attributelist >"
+   "            </parm >"
+   "        </parmlist >"
+   "        <attribute name=\"kind\" value=\"function\" id=\"231596\" addr=\"0x7f547fcc01b0\" />"
+   "        <attribute name=\"type\" value=\"VkResult\" id=\"231597\" addr=\"0x7f547fcc01b0\" />"
+   "        <attribute name=\"sym_symtab\" value=\"0x7f5480fe18b0\" id=\"231598\" addr=\"0x7f5480fe18b0\" />"
+   "        <attribute name=\"sym_overname\" value=\"__SWIG_0\" id=\"231599\" addr=\"0x7f547fcc01b0\" />"
+   "    </attributelist >"
+   "</cdecl >"))
+
+(let ((mat (sxml-match
+            (lambda (M C C*)
+              (M 'cdecl (C (M 'attributelist
+                              (C (M 'attribute (lambda (e) (if (string=? "name" (sxml:attr e 'name)) () #f)))
+                                 (M 'attribute (lambda (e) (if (string=? "kind" (sxml:attr e 'name)) () #f)))
+                                 (M 'attribute (lambda (e) (if (string=? "type" (sxml:attr e 'name)) () #f)))
+                                 (M 'parmlist
+                                    (C* (M 'parm (C (M 'attributelist (C* (M 'attribute)))))))
+                                 )))
+                 )))))
+
+  (test* "test attributes"
+         '(cdecl (@ (id "231565") (addr "0x7f547fd3a2b0"))
+                 (attributelist (@ (id "231566") (addr "0x7f547fd3a2b0"))
+                                (attribute (@ (value "vkAcquireNextImageKHR") (name "name") (id "231568") (addr "0x7f547fcc01b0")))
+                                (attribute (@ (value "function") (name "kind") (id "231596") (addr "0x7f547fcc01b0")))
+                                (attribute (@ (value "VkResult") (name "type") (id "231597") (addr "0x7f547fcc01b0")))
+                                (parmlist (@ (id "231570") (addr "0x7f547fd39c50"))
+                                          (parm (@ (id "231571"))
+                                                (attributelist (@ (id "231572") (addr "0x7f547fd39c50"))
+                                                               (attribute (@ (value "device") (name "name") (id "231573") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "VkDevice") (name "type") (id "231574") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "1") (name "compactdefargs") (id "231575") (addr "0x7f547fcc01b0")))))
+                                          (parm (@ (id "231576"))
+                                                (attributelist (@ (id "231577") (addr "0x7f547fd39d70"))
+                                                               (attribute (@ (value "swapchain") (name "name") (id "231578") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "VkSwapchainKHR") (name "type") (id "231579") (addr "0x7f547fcc01b0")))))
+                                          (parm (@ (id "231580"))
+                                                (attributelist (@ (id "231581") (addr "0x7f547fd39e90"))
+                                                               (attribute (@ (value "timeout") (name "name") (id "231582") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "uint64_t") (name "type") (id "231583") (addr "0x7f547fcc01b0")))))
+                                          (parm (@ (id "231584"))
+                                                (attributelist (@ (id "231585") (addr "0x7f547fd39fb0"))
+                                                               (attribute (@ (value "semaphore") (name "name") (id "231586") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "VkSemaphore") (name "type") (id "231587") (addr "0x7f547fcc01b0")))))
+                                          (parm (@ (id "231588"))
+                                                (attributelist (@ (id "231589") (addr "0x7f547fd3a0d0"))
+                                                               (attribute (@ (value "fence") (name "name") (id "231590") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "VkFence") (name "type") (id "231591") (addr "0x7f547fcc01b0")))))
+                                          (parm (@ (id "231592"))
+                                                (attributelist (@ (id "231593") (addr "0x7f547fd3a1f0"))
+                                                               (attribute (@ (value "pImageIndex") (name "name") (id "231594") (addr "0x7f547fcc01b0")))
+                                                               (attribute (@ (value "p.uint32_t") (name "type") (id "231595") (addr "0x7f547fcc01b0"))))))))
+         (mat (cadr (ssax:xml->sxml (open-input-string *xml*) ()))))
+
+  )
+
 
 (test-end)
