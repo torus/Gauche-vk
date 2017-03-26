@@ -8,13 +8,9 @@
 (use sxml.tools)
 
 (define (children e)
-  (match e
-         ((_ ('@ attr ...) c ...)
-          (cddr e))
-         ((_  c ...)
-          (cdr e))))
+  (sxml:content-raw e))
 
-(define (isolate-element e)
+(define (isolate-element e) ;; FIXME: ignores aux-list
   (match e
          ((_ ('@ attr ...) c ...)
           (take e 2))
