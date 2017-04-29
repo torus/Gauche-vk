@@ -9,18 +9,19 @@
 
 ((sxml-match (lambda (M C C*) (M 'a))) '(a))
 
-(test* "single tag" '(a) ((sxml-match (lambda (M C C*) (M 'a))) '(a)))
-(test* "single tag with attributes" '(a (@ (n "1")))
+(test* "single tag" '() ((sxml-match (lambda (M C C*) (M 'a))) '(a)))
+(test* "single tag with attributes" '()
        ((sxml-match (lambda (M C C*) (M 'a))) '(a (@ (n "1")))))
 
 (let ((mat
        (sxml-match
         (lambda (M C C*)
-          (M 'root (C (M 'c1)
-                      (M 'c2)
-                      (M 'c3
-                         (C (M 'c31)
-                            (M 'c32))))
+          (M 'root
+             (C (M 'c1)
+                (M 'c2)
+                (M 'c3
+                   (C (M 'c31)
+                      (M 'c32))))
              )))))
 
   (let* ((xml (string-append
@@ -34,25 +35,23 @@
                "</root>"))
          (sxml (ssax:xml->sxml (open-input-string xml) ())))
 
-    (test* "positive" '(root (c1) (c2 (@ (n "1"))) (c3 (@ (n "2")) (c31) (c32)))
+    (test* "positive" '(() () (() ()))
            (mat (cadr sxml))))
 
-  (test* "extra tags" '(root (c1) (c2) (c3 (c31) (c32)))
+  (test* "extra tags" '(() () (() ()))
          (mat '(root (x) (c1) (c2) (c3 (c31) (c32)))))
 
   (test* "fails when a wrong element" #f (mat '(root (x)  (c2) (c3 (c31) (c32)))))
   (test* "fails when a wrong element" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
   (test* "fails when a element is missing" #f (mat '(root (c1) (c3 (c31) (c32)))))
 
-  (test* "ignores extra elements"  '(root (c1) (c2 (@ (n "1"))) (c3 (@ (n "1")) (c31) (c32)))
+  (test* "ignores extra elements" '(() () (() ()))
          (mat '(root (c1) (c2 (@ (n "1"))) (c2 (@ (n "2")))
                      (c3 (@ (n "1")) (c31) (c32))
                      (c3 (@ (n "2")) (c31) (c32)))))
 
   (test* "multiple match"
-         '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
-                    (c2 (@ (n "2")) (c3 (@ (m "2"))))
-                    (c2 (@ (n "3")) (c3 (@ (m "3"))))))
+         '(((()) (()) (())))
          (let ((doc '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
                                (c2 (@ (n "2")) (c3 (@ (m "2"))))
                                (c2 (@ (n "3")) (c3 (@ (m "3")) (c4))))))
@@ -65,11 +64,7 @@
            (mat doc)
            ))
 
-  (test* "multiple multiple match" '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
-                                              (c4 (@ (n "1")))
-                                              (c2 (@ (n "2")) (c3 (@ (m "2"))))
-                                              (c4 (@ (n "2")))
-                                              (c2 (@ (n "3")) (c3 (@ (m "3"))))))
+  (test* "multiple multiple match" '(((()) () (()) () (())))
          (let ((doc '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
                                (c4 (@ (n "1")))
                                (c2 (@ (n "2")) (c3 (@ (m "2"))))
@@ -153,39 +148,23 @@
                  )))))
 
   (test* "test attributes"
-         '(cdecl (@ (id "231565") (addr "0x7f547fd3a2b0"))
-                 (attributelist (@ (id "231566") (addr "0x7f547fd3a2b0"))
-                                (attribute (@ (value "vkAcquireNextImageKHR") (name "name") (id "231568") (addr "0x7f547fcc01b0")))
-                                (attribute (@ (value "function") (name "kind") (id "231596") (addr "0x7f547fcc01b0")))
-                                (attribute (@ (value "VkResult") (name "type") (id "231597") (addr "0x7f547fcc01b0")))
-                                (parmlist (@ (id "231570") (addr "0x7f547fd39c50"))
-                                          (parm (@ (id "231571"))
-                                                (attributelist (@ (id "231572") (addr "0x7f547fd39c50"))
-                                                               (attribute (@ (value "device") (name "name") (id "231573") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "VkDevice") (name "type") (id "231574") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "1") (name "compactdefargs") (id "231575") (addr "0x7f547fcc01b0")))))
-                                          (parm (@ (id "231576"))
-                                                (attributelist (@ (id "231577") (addr "0x7f547fd39d70"))
-                                                               (attribute (@ (value "swapchain") (name "name") (id "231578") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "VkSwapchainKHR") (name "type") (id "231579") (addr "0x7f547fcc01b0")))))
-                                          (parm (@ (id "231580"))
-                                                (attributelist (@ (id "231581") (addr "0x7f547fd39e90"))
-                                                               (attribute (@ (value "timeout") (name "name") (id "231582") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "uint64_t") (name "type") (id "231583") (addr "0x7f547fcc01b0")))))
-                                          (parm (@ (id "231584"))
-                                                (attributelist (@ (id "231585") (addr "0x7f547fd39fb0"))
-                                                               (attribute (@ (value "semaphore") (name "name") (id "231586") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "VkSemaphore") (name "type") (id "231587") (addr "0x7f547fcc01b0")))))
-                                          (parm (@ (id "231588"))
-                                                (attributelist (@ (id "231589") (addr "0x7f547fd3a0d0"))
-                                                               (attribute (@ (value "fence") (name "name") (id "231590") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "VkFence") (name "type") (id "231591") (addr "0x7f547fcc01b0")))))
-                                          (parm (@ (id "231592"))
-                                                (attributelist (@ (id "231593") (addr "0x7f547fd3a1f0"))
-                                                               (attribute (@ (value "pImageIndex") (name "name") (id "231594") (addr "0x7f547fcc01b0")))
-                                                               (attribute (@ (value "p.uint32_t") (name "type") (id "231595") (addr "0x7f547fcc01b0"))))))))
-         (mat (cadr (ssax:xml->sxml (open-input-string *xml*) ()))))
+         '((() () () (((() ())) ((() ())) ((() ())) ((() ())) ((() ())) ((() () ())))))
+         (mat (cadr (ssax:xml->sxml (open-input-string *xml*) ())))))
 
+(let ((mat
+       (sxml-match
+        (lambda (M C C*)
+          (M 'root
+             (C (M 'parent (C* (M 'c (lambda (e) (list (sxml:attr e 'a)))))
+                   (lambda (elem matched)
+                     (test* "matched" '((1) (2) (3))
+                            matched)
+                     ()
+                     ))))))))
+
+  (mat '(root (parent (c (@ (a 1)) (d))
+                      (c (@ (a 2)) (e))
+                      (c (@ (a 3)) (g)))))
   )
 
 

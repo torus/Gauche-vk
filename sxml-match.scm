@@ -10,15 +10,10 @@
 (define (children e)
   (sxml:content-raw e))
 
-(define (isolate-element e) ;; FIXME: ignores aux-list
-  (match e
-         ((_ ('@ attr ...) c ...)
-          (take e 2))
-         ((_  c ...)
-          (take e 1))))
-
-(define (test-condition proc elem)
-  (let ((result (proc elem)))
+(define (test-condition proc elem previous-results)
+  (let ((result (if (procedure-arity-includes? proc 2)
+                    (proc elem previous-results)
+                    (proc elem))))
     (if (eq? #t result)
         ()
         result)))
@@ -29,19 +24,21 @@
       (eq? tagname tag)))
 
   (lambda (elem)
-    (let loop ((procs (cons tag=? procs)) (children ()))
+    (let loop ((procs (cons tag=? procs)) (results ()))
       (if (null? procs)
-          (append (isolate-element elem) (reverse children))
-          (let ((result (test-condition (car procs) elem)))
+          #;(append (isolate-element elem) (reverse results))
+          (reverse results)
+          (let* ((proc (car procs))
+                 (result (test-condition proc elem results)))
             (if result
-                (loop (cdr procs) (append result children))
+                (loop (cdr procs) (append result results))
                 #f))))))
 
 (define (C . procs)
   (define (match-any proc children)
     (if (null? children)
         #f
-        (let ((result (test-condition proc (car children))))
+        (let ((result (test-condition proc (car children) ())))
           (if result
               result
               (match-any proc (cdr children))))))
@@ -59,7 +56,7 @@
   (define (match-any procs child)
     (if (null? procs)
         #f
-        (let ((result (test-condition (car procs) child)))
+        (let ((result (test-condition (car procs) child ())))
           (if result
               result
               (match-any (cdr procs) child)))))
@@ -67,7 +64,7 @@
     (let loop ((children (children e))
                (elems ()))
       (if (null? children)
-          elems
+          (reverse elems)
           (let ((matched (match-any procs (car children))))
             (if matched
                 (loop (cdr children) (cons matched elems))
