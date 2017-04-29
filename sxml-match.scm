@@ -26,7 +26,6 @@
   (lambda (elem)
     (let loop ((procs (cons tag=? procs)) (results ()))
       (if (null? procs)
-          #;(append (isolate-element elem) (reverse results))
           (reverse results)
           (let* ((proc (car procs))
                  (result (test-condition proc elem results)))

@@ -164,7 +164,30 @@
 
   (mat '(root (parent (c (@ (a 1)) (d))
                       (c (@ (a 2)) (e))
-                      (c (@ (a 3)) (g)))))
+                      (c (@ (a 3)) (g))))))
+
+(let* ((res ())
+       (mat
+        (sxml-match
+         (lambda (M C C*)
+           (M 'root
+              (C (M 'parent (C* (M 'a (C* (M 'c (lambda (e) (list (sxml:attr e 'a))))
+                                          (M 'd (lambda (e) (list (sxml:attr e 'a)))))
+                                   (lambda (e results)
+                                     results
+                                     (set! res (cons (apply string-append (map car results)) res))
+                                     )
+                                   ))
+                    )))))))
+
+  (mat '(root (parent (a (c (@ (a "1")) (d))
+                         (d (@ (a "a"))))
+                      (a (c (@ (a "2")) (e))
+                         (d (@ (a "b"))))
+                      (a (c (@ (a "3")) (g))
+                         (d (@ (a "c")))))))
+
+    (test* "multiple matched" '("3c" "2b" "1a") res)
   )
 
 
