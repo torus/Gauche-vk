@@ -171,14 +171,21 @@
         (sxml-match
          (lambda (M C C*)
            (M 'root
-              (C (M 'parent (C* (M 'a (C* (M 'c (lambda (e) (list (sxml:attr e 'a))))
-                                          (M 'd (lambda (e) (list (sxml:attr e 'a)))))
-                                   (lambda (e results)
-                                     results
-                                     (set! res (cons (apply string-append (map car results)) res))
-                                     )
+              (C (M 'parent (C* (lambda (e)
+                                  (let ((hash (make-hash-table)))
+                                    ((M 'a (C* (M 'c (lambda (e)
+                                                      (hash-table-put! hash 'num (sxml:attr e 'a))
+                                                      ()))
+                                              (M 'd (lambda (e)
+                                                      (hash-table-put! hash 'name (sxml:attr e 'a))
+                                                      ())))
+                                       (lambda (e results)
+                                         results
+                                         (set! res (cons `(entry ,(hash-table-get hash 'name)
+                                                                 ,(hash-table-get hash 'num)) res))
+                                         )) e)))
                                    ))
-                    )))))))
+                    ))))))
 
   (mat '(root (parent (a (c (@ (a "1")) (d))
                          (d (@ (a "a"))))
@@ -187,7 +194,7 @@
                       (a (c (@ (a "3")) (g))
                          (d (@ (a "c")))))))
 
-    (test* "multiple matched" '("3c" "2b" "1a") res)
+    (test* "multiple matched" '((entry "c" "3") (entry "b" "2") (entry "a" "1")) res)
   )
 
 
