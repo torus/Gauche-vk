@@ -9,8 +9,8 @@
 
 ((sxml-match (lambda (M C C*) (M 'a))) '(a))
 
-(test* "single tag" '() ((sxml-match (lambda (M C C*) (M 'a))) '(a)))
-(test* "single tag with attributes" '()
+(test* "single tag" #t ((sxml-match (lambda (M C C*) (M 'a))) '(a)))
+(test* "single tag with attributes" #t
        ((sxml-match (lambda (M C C*) (M 'a))) '(a (@ (n "1")))))
 
 (let ((mat
@@ -35,23 +35,23 @@
                "</root>"))
          (sxml (ssax:xml->sxml (open-input-string xml) ())))
 
-    (test* "positive" '(() () (() ()))
+    (test* "positive" #t
            (mat (cadr sxml))))
 
-  (test* "extra tags" '(() () (() ()))
+  (test* "extra tags" #t
          (mat '(root (x) (c1) (c2) (c3 (c31) (c32)))))
 
   (test* "fails when a wrong element" #f (mat '(root (x)  (c2) (c3 (c31) (c32)))))
   (test* "fails when a wrong element" #f (mat '(root (c1) (c2) (x (c31) (c32)))))
   (test* "fails when a element is missing" #f (mat '(root (c1) (c3 (c31) (c32)))))
 
-  (test* "ignores extra elements" '(() () (() ()))
+  (test* "ignores extra elements" #t
          (mat '(root (c1) (c2 (@ (n "1"))) (c2 (@ (n "2")))
                      (c3 (@ (n "1")) (c31) (c32))
                      (c3 (@ (n "2")) (c31) (c32)))))
 
   (test* "multiple match"
-         '(((()) (()) (())))
+         #t
          (let ((doc '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
                                (c2 (@ (n "2")) (c3 (@ (m "2"))))
                                (c2 (@ (n "3")) (c3 (@ (m "3")) (c4))))))
@@ -64,7 +64,7 @@
            (mat doc)
            ))
 
-  (test* "multiple multiple match" '(((()) () (()) () (())))
+  (test* "multiple multiple match" #t
          (let ((doc '(root (c1 (c2 (@ (n "1")) (c3 (@ (m "1"))))
                                (c4 (@ (n "1")))
                                (c2 (@ (n "2")) (c3 (@ (m "2"))))
@@ -147,24 +147,8 @@
                                  )))
                  )))))
 
-  (test* "test attributes"
-         '((() () () (((() ())) ((() ())) ((() ())) ((() ())) ((() ())) ((() () ())))))
+  (test* "test attributes" #t
          (mat (cadr (ssax:xml->sxml (open-input-string *xml*) ())))))
-
-(let ((mat
-       (sxml-match
-        (lambda (M C C*)
-          (M 'root
-             (C (M 'parent (C* (M 'c (lambda (e) (list (sxml:attr e 'a)))))
-                   (lambda (elem matched)
-                     (test* "matched" '((1) (2) (3))
-                            matched)
-                     ()
-                     ))))))))
-
-  (mat '(root (parent (c (@ (a 1)) (d))
-                      (c (@ (a 2)) (e))
-                      (c (@ (a 3)) (g))))))
 
 (let* ((res ())
        (mat
@@ -174,18 +158,15 @@
               (C (M 'parent (C* (lambda (e)
                                   (let ((hash (make-hash-table)))
                                     ((M 'a (C* (M 'c (lambda (e)
-                                                      (hash-table-put! hash 'num (sxml:attr e 'a))
-                                                      ()))
-                                              (M 'd (lambda (e)
-                                                      (hash-table-put! hash 'name (sxml:attr e 'a))
-                                                      ())))
-                                       (lambda (e results)
-                                         results
-                                         (set! res (cons `(entry ,(hash-table-get hash 'name)
-                                                                 ,(hash-table-get hash 'num)) res))
-                                         )) e)))
-                                   ))
-                    ))))))
+                                                      (hash-table-put! hash 'num (sxml:attr e 'a))))
+                                               (M 'd (lambda (e)
+                                                       (hash-table-put! hash 'name (sxml:attr e 'a)))))
+                                        (lambda (e)
+                                          (set! res (cons `(entry ,(hash-table-get hash 'name)
+                                                                  ,(hash-table-get hash 'num)) res))
+                                          )) e)))
+                                ))
+                 ))))))
 
   (mat '(root (parent (a (c (@ (a "1")) (d))
                          (d (@ (a "a"))))

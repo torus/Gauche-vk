@@ -10,13 +10,8 @@
 (define (children e)
   (sxml:content-raw e))
 
-(define (test-condition proc elem previous-results)
-  (let ((result (if (procedure-arity-includes? proc 2)
-                    (proc elem previous-results)
-                    (proc elem))))
-    (if (eq? #t result)
-        ()
-        result)))
+(define (test-condition proc elem)
+  (proc elem))
 
 (define (M tag . procs)
   (define (tag=? elem)
@@ -24,22 +19,21 @@
       (eq? tagname tag)))
 
   (lambda (elem)
-    (let loop ((procs (cons tag=? procs)) (results ()))
+    (let loop ((procs (cons tag=? procs)))
       (if (null? procs)
-          (reverse results)
+          #t
           (let* ((proc (car procs))
-                 (result (test-condition proc elem results)))
+                 (result (test-condition proc elem)))
             (if result
-                (loop (cdr procs) (append result results))
+                (loop (cdr procs))
                 #f))))))
 
 (define (C . procs)
   (define (match-any proc children)
     (if (null? children)
         #f
-        (let ((result (test-condition proc (car children) ())))
-          (if result
-              result
+        (let ((result (test-condition proc (car children))))
+          (or result
               (match-any proc (cdr children))))))
 
   (lambda (e)
@@ -55,10 +49,10 @@
   (define (match-any procs child)
     (if (null? procs)
         #f
-        (let ((result (test-condition (car procs) child ())))
-          (if result
-              result
+        (let ((result (test-condition (car procs) child)))
+          (or result
               (match-any (cdr procs) child)))))
+
   (lambda (e)
     (let loop ((children (children e))
                (elems ()))
